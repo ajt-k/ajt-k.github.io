@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWR 1 Multi-Modal Paper</title>
+    <!-- We include Scrollama so the browser knows when you are scrolling past text blocks -->
+    <script src="https://unpkg.com/scrollama"></script>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Georgia, serif; background: #fff; color: #111; overflow-x: hidden; }
+        
+        /* Elegant academic text styling */
+        .prose-block { max-width: 650px; margin: 0 auto; padding: 6rem 2rem; font-size: 1.25rem; line-height: 1.8; color: #222; }
+        .intro-text p { margin-bottom: 2rem; }
+
+        /* Scrollytelling Setup */
+        .avalanche-container { position: relative; background: #111; } 
+        
+        /* This box locks onto the screen and takes up the whole view */
+        .sticky-viewport { position: sticky; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0b0b0f; }
+        
+        /* The Prose Overlay floating above the sticky video chaos */
+        .scroll-narrative { position: relative; z-index: 10; pointer-events: none; margin-top: -100vh; }
+        .trigger-step { height: 130vh; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
+        .trigger-card { background: rgba(255, 255, 255, 0.95); border: 1px solid #ddd; color: #111; padding: 2rem; border-radius: 12px; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+        /* Placeholders for your future videos */
+        .phone-mockup { position: absolute; width: 280px; height: 500px; border-radius: 24px; border: 4px solid #444; box-shadow: 0 30px 60px rgba(0,0,0,0.8); overflow: hidden; opacity: 0; transform: scale(0.6) translate(0, 100px); transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-family: sans-serif; font-weight: bold; }
+        
+        /* Distinct positions and slight tilts for the cards */
+        .phone-mockup[data-video="1"] { top: 15%; left: 38%; transform: rotate(-5deg) scale(0.9); z-index: 2; background: #2c3e50; }
+        .phone-mockup[data-video="2"] { top: 22%; left: 18%; transform: rotate(7deg) scale(0.95); z-index: 3; background: #8e44ad; }
+        .phone-mockup[data-video="3"] { top: 12%; left: 58%; transform: rotate(-9deg) scale(0.85); z-index: 4; background: #d35400; }
+        .phone-mockup[data-video="4"] { top: 32%; left: 46%; transform: rotate(11deg) scale(1.05); z-index: 5; background: #c0392b; }
+
+        /* Class that JavaScript turns on to animate the cards into view */
+        .phone-mockup.visible { opacity: 1; transform: none !important; }
+        .phone-mockup span { font-size: 1.5rem; margin-bottom: 10px; }
+        .phone-mockup p { font-size: 0.9rem; font-weight: normal; opacity: 0.8; margin: 0 15px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. The Monologue -->
+    <div class="prose-block intro-text">
+        <p>I wake up each morning at 8:00. I throw on my clothes, head to the dining hall, and grab a quick coffee. As a Stanford student, I rush to my PWR 1 class—I'm already a minute late. After a successful, exhausting class, I step out onto the quad and open my phone.</p>
+        <p style="text-align: center; color: #888; font-style: italic; margin-top: 5rem;">👇 Scroll down to see the screen activate...</p>
+    </div>
+
+    <!-- 2. The Algorithmic Cascade -->
+    <div class="avalanche-container">
+        <div class="sticky-viewport">
+            <!-- Box 1 -->
+            <div class="phone-mockup" data-video="1">
+                <span>📱 Video 1</span>
+                <p>[Chemtrails Overload Clip]</p>
+            </div>
+            <!-- Box 2 -->
+            <div class="phone-mockup" data-video="2">
+                <span>📱 Video 2</span>
+                <p>[Conspiracy Theory Loop]</p>
+            </div>
+            <!-- Box 3 -->
+            <div class="phone-mockup" data-video="3">
+                <span>📱 Video 3</span>
+                <p>[Fear Mongering Audio Track]</p>
+            </div>
+            <!-- Box 4 -->
+            <div class="phone-mockup" data-video="4">
+                <span>📱 Video 4</span>
+                <p>[Final Overlapping Feed]</p>
+            </div>
+        </div>
+
+        <!-- The text elements that trigger the boxes -->
+        <div class="scroll-narrative">
+            <div class="trigger-step" data-step="1">
+                <div class="trigger-card">Instead of more text, the smooth, interactive scrolling goes to an Instagram clip of chemtrails.</div>
+            </div>
+            <div class="trigger-step" data-step="2">
+                <div class="trigger-card">Then a small page break and another one layered...</div>
+            </div>
+            <div class="trigger-step" data-step="3">
+                <div class="trigger-card">Then two of them layered...</div>
+            </div>
+            <div class="trigger-step" data-step="4">
+                <div class="trigger-card">Then more and more with audio getting confusing and then...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. The Snap-Back Outro -->
+    <div class="prose-block">
+        <p><strong>I close my phone.</strong></p>
+        <p>I'm not a chemtrails believer. I understand the physics of contrail formation. I've worked with atmospheric satellite data in the past, I have faith in the science. I generally find too many logical holes in this absurd argument to give it much faith. But upon watching 10 + videos like this in a row, I start to question whether I should be so sure of myself.</p>
+    </div>
+
+    <script>
+        const scroller = scrollama();
+        
+        // Grouping our placeholders so JavaScript can find them
+        const videoCards = {
+            1: [document.querySelector('[data-video="1"]')],
+            2: [document.querySelector('[data-video="2"]')],
+            3: [document.querySelector('[data-video="3"]'), document.querySelector('[data-video="4"]')]
+        };
+
+        scroller
+            .setup({
+                step: '.trigger-step',
+                offset: 0.6, // Fire trigger when a text card reaches 60% depth from screen top
+                debug: false
+            })
+            .onStepEnter(response => {
+                const step = response.element.dataset.step;
+                
+                if (step === "1") {
+                    videoCards[1][0].classList.add('visible');
+                } else if (step === "2") {
+                    videoCards[2][0].classList.add('visible');
+                } else if (step === "3" || step === "4") {
+                    videoCards[3].forEach(card => card.classList.add('visible'));
+                }
+            })
+            .onStepExit(response => {
+                // If scrolling back up, smoothly peel the cards away
+                if (response.direction === "up") {
+                    const step = response.element.dataset.step;
+                    if (step === "1") {
+                        videoCards[1][0].classList.remove('visible');
+                    } else if (step === "2") {
+                        videoCards[2][0].classList.remove('visible');
+                    } else if (step === "3") {
+                        videoCards[3].forEach(card => card.classList.remove('visible'));
+                    }
+                }
+            });
+
+        window.addEventListener('resize', scroller.resize);
+    </script>
+</body>
+</html>

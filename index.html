@@ -1,290 +1,727 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Architecture of Doubt | PWR 1 Multi-Modal Paper</title>
-    <!-- Scrollama handles our scroll trigger points -->
-    <script src="https://unpkg.com/scrollama"></script>
-    <style>
-        /* --- GLOBAL TYPOGRAPHY & RESET --- */
-        body { 
-            margin: 0; 
-            font-family: "Times New Roman", Times, Baskerville, Georgia, serif; 
-            background: #ffffff; 
-            color: #111111; 
-            overflow-x: hidden; 
-            -webkit-font-smoothing: antialiased;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alex Thomas</title>
+<meta name="description" content="Alex Thomas, engineering physics at Stanford. Batteries, X-ray scattering, robots.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap">
+<style>
 
-        /* --- HERO COVER BLOCK --- */
-        .hero-cover {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 2rem;
-            background: #ffffff;
-            box-sizing: border-box;
-        }
-        .essay-header {
-            max-width: 850px;
-        }
-        .essay-metadata {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #bd0000; /* Stanford Cardinal Red accent */
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-        .essay-title {
-            font-size: 3.5rem;
-            font-weight: normal;
-            line-height: 1.15;
-            margin: 0 0 1rem 0;
-            letter-spacing: -0.02em;
-        }
-        .essay-subtitle {
-            font-size: 1.5rem;
-            font-style: italic;
-            color: #555555;
-            max-width: 650px;
-            margin: 0 auto 3rem auto;
-            line-height: 1.4;
-        }
-        .essay-author {
-            font-size: 1.15rem;
-            color: #222222;
-            margin-bottom: 5rem;
-        }
-        .scroll-indicator {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #999999;
-            animation: pulse 2s infinite;
-        }
+/* Layout: plates. Desktop: 12-column grid, figures on the left two-thirds, a short info column on the right. Phone: figures stacked, one caption line each. Figures are drawn in the page's own type and ink. */
+:root{
+  --bg:#f5f1e9; --ink:#1c1c1c; --muted:rgba(28,28,28,.56); --faint:rgba(28,28,28,.09); --hair:rgba(28,28,28,.16);
+  --blue:#2c5aa0; --rust:#b4532a;
+  --sans:"Source Sans 3", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14.4px;line-height:1.5;font-weight:420;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+main{max-width:1180px;margin:0 auto;padding-block:88px 96px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:36px;row-gap:28px}
+.grid>*{min-width:0}
+/* header */
+header{align-items:end}
+header .who{grid-column:1/9}
+header h1{font-size:16px;font-weight:650;margin:0}
+header p{margin:2px 0 0;color:var(--muted)}
+header nav{grid-column:9/13;display:flex;align-items:center;gap:18px;font-size:12px;color:var(--muted);justify-content:flex-start}
+header nav a:hover{color:var(--ink)}
+/* plates */
+.plate{margin-top:80px;padding-top:18px;border-top:1px solid var(--hair)}
+.fig-l{grid-column:1/9}
+.fig-a{grid-column:1/5}.fig-b{grid-column:5/9}.fig-c{grid-column:9/13}
+.info{grid-column:9/13;align-self:start}
+.chart{width:100%;display:block}
+.chart svg{display:block;overflow:visible}
+.mini{font-size:12px;color:var(--muted);margin-top:8px}
+.info h2{font-size:16px;font-weight:650;margin:0;line-height:1.35;text-wrap:balance}
+.info .meta{font-size:12px;color:var(--muted);margin:3px 0 12px}
+.info p{margin:0 0 12px}
+.stats{margin:14px 0 0;padding:0;border-top:1px solid var(--hair)}
+.stats div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--faint);font-size:13px}
+.stats dt{color:var(--muted)}
+.stats dd{margin:0;font-variant-numeric:tabular-nums;font-weight:560;text-align:right}
+.more{all:unset;cursor:pointer;display:inline-block;margin-top:14px;font-size:12px;color:var(--muted);transition:color .15s}
+.more:hover,.more:focus-visible{color:var(--ink)}
+.more:focus-visible{outline:1px solid var(--ink);outline-offset:3px}
+.photo{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;mix-blend-mode:multiply;filter:saturate(.82) contrast(.96)}
+.ph{aspect-ratio:4/3;background:repeating-linear-gradient(135deg,var(--faint) 0 1px,transparent 1px 9px);border:1px solid var(--hair);display:grid;place-items:center;font-size:12px;color:var(--muted)}
+.tiles .label{grid-column:1/-1;margin-bottom:-4px}
+.tile{grid-column:span 4}
+.tile .t{margin-top:8px;font-weight:620}
+.tile .d{font-size:12px;color:var(--muted)}
+.tile[data-k]{cursor:pointer}
+.tile[data-k]:hover .t{text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:3px}
+.tile[data-k]:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
+footer{margin-top:80px;padding-top:12px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+footer nav{display:flex;gap:18px}
+footer a:hover{color:var(--ink)}
+.cad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cad figure{margin:0}
+.cad img{width:100%;aspect-ratio:1;object-fit:contain;display:block;mix-blend-mode:multiply}
+.cad figcaption{font-size:12px;color:var(--muted);text-align:center;margin-top:2px}
+.cadhead{font-size:12.5px;font-weight:600;margin:0 0 10px}
+.strips{display:flex;gap:12px;height:240px;overflow:hidden}
+.strips img{height:100%;width:auto;max-width:60%;object-fit:cover;object-position:left center;flex:none;display:block;mix-blend-mode:multiply;filter:saturate(.85)}
+.strips ol{flex:1;list-style:none;margin:0;padding:0;display:grid;grid-template-rows:repeat(5,1fr);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.strips li{display:flex;align-items:center;border-top:1px solid var(--faint)}
+.strips li:first-child{border-top:0}
+.tiles4 .tile{grid-column:span 3}
+.band{width:100%;display:block;mix-blend-mode:multiply}
+.lead{grid-column:1/-1;margin-bottom:4px}
+.lead h2{font-size:22px;font-weight:650;letter-spacing:-.01em;line-height:1.25;margin:0;text-wrap:balance}
+.lead p{margin:4px 0 0;color:var(--muted);font-size:15px;max-width:620px}
+.group{margin-top:80px}
+.gwrap{grid-column:1/-1;border-top:2px solid var(--ink);padding-top:14px}
+.gtitle{font-size:34px!important;font-weight:650;letter-spacing:-.015em;line-height:1.2;margin:0}
+.gwrap p{margin:4px 0 0;color:var(--muted);font-size:15px}
+.lead h2{font-size:23px}
+@media (max-width:640px){.gtitle{font-size:27px!important}.lead h2{font-size:20px}}
+.gplate{border-top:2px solid var(--ink)!important;margin-top:96px}
+.todo{color:#b45309;font-style:italic;font-weight:420}
+.vloop{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--faint)}
+.fig-v{grid-column:1/5}.fig-r{grid-column:5/13}
+.vdemo{width:100%;aspect-ratio:9/16;max-height:640px;object-fit:cover;display:block;background:#1c1c1c}
+.pair2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mine{margin:4px 0 14px}
+.mine .ml{font-size:12px;color:var(--muted);margin-bottom:4px}
+.mine ul{margin:0;padding-left:16px}
+.mine li{margin-bottom:3px;font-weight:520}
+.mine li::marker{color:var(--blue)}
+.affil{grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:12px 26px;margin-top:4px}
+.affil img{height:22px;width:auto;display:block;mix-blend-mode:multiply}
+.affil span{font-size:12px;color:var(--muted)}
+.fig-h1{grid-column:1/7}.fig-h2{grid-column:7/13}.fig-w{grid-column:5/13}
+.inset{margin:26px 0 0;max-width:300px}
+.inset figcaption{font-size:12px;color:var(--muted);margin-top:6px}
+.mine li b,.lead p b,.gwrap p b{font-weight:680;color:var(--ink)}
+.fig-v2{grid-column:1/5;grid-row:span 2;align-self:start}
+.fig-s{grid-column:5/13}
+.photo.wide{aspect-ratio:2/1}
+.uplink{white-space:nowrap;text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:3px}
+.uplink:hover{text-decoration-color:var(--ink)}
+html{scroll-behavior:smooth}
+.also-line{grid-column:1/-1;font-size:13px;color:var(--muted);cursor:pointer;margin-top:4px}
+.also-line b{color:var(--ink);font-weight:600}
+.also-line:hover{color:var(--ink)}
+.otherwise .label{grid-column:1/-1}
+.otherwise p{grid-column:1/9;margin:0;font-size:16px;line-height:1.55}
+.otherwise .o2{color:var(--muted)}
+@media (max-width:920px){.otherwise p{grid-column:1/-1}}
+.fig-full{grid-column:1/-1}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.sched-img{width:100%;display:block;mix-blend-mode:multiply}
+@media (max-width:640px){.sched-img{width:760px;max-width:none}}
+/* side panel */
+.scrim{position:fixed;inset:0;background:rgba(28,28,28,.18);opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.panel{position:fixed;top:0;right:0;height:100%;width:min(480px,100%);background:var(--bg);border-left:1px solid var(--hair);transform:translateX(100%);transition:transform .25s ease;z-index:10;overflow-y:auto;padding:28px 30px 48px;padding-right:max(30px,env(safe-area-inset-right,0px))}
+.open{overflow:hidden}.open .scrim{opacity:1;pointer-events:auto}.open .panel{transform:none}
+.panel .x{all:unset;cursor:pointer;font-size:12px;color:var(--muted)}
+.panel .x:hover{color:var(--ink)}
+.panel h2{font-size:16px;font-weight:650;margin:22px 0 0}
+.panel .meta{font-size:12px;color:var(--muted);margin:2px 0 16px}
+.panel ul{margin:0 0 18px;padding-left:16px}
+.panel li{margin-bottom:4px}
+.panel li::marker{color:var(--muted)}
+.panel figure{margin:20px 0}
+.panel figcaption{font-size:12px;color:var(--muted);margin-top:6px}
+.panel .links{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px;border-top:1px solid var(--hair);padding-top:10px;margin-top:24px}
+.panel .links a{text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:2px}
+/* tablet and phone: one column, figures first */
+@media (max-width:920px){
+  .grid{column-gap:24px}
+  header .who,header nav,.fig-l,.info{grid-column:1/-1}
+  .info{order:10}
+  .fig-a{grid-column:1/7}.fig-b{grid-column:7/13}.fig-c{grid-column:1/7}
+  .fig-v{grid-column:1/6}.fig-w{grid-column:6/13}.fig-r{grid-column:7/13}.pair2{grid-template-columns:1fr}
+  .tile{grid-column:span 4}
+  .tiles4 .tile{grid-column:span 6}
+}
+@media (max-width:640px){
+  main{padding-block:56px 72px}
+  .fig-a,.fig-b,.fig-c,.fig-v,.fig-r,.fig-w,.fig-h1,.fig-h2,.fig-s,.tile{grid-column:1/-1}
+  .fig-v2{grid-row:auto}
+  .photo.wide{aspect-ratio:4/3}
+  .inset{max-width:220px}
+  .vdemo{max-height:none}
+  .tiles .tile,.tiles4 .tile{grid-column:span 6}
+  .cad{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plate{margin-top:64px}
+  .info .desc:not(.keep),.info .stats{display:none}
+  .info .desc.keep{flex-basis:100%;order:6;margin:8px 0 0}
+  .info{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px}
+  .info h2{font-size:14.4px;font-weight:620}
+  .info .meta{margin:0;font-size:12px}
+  .info .mine{flex-basis:100%;order:5;margin:8px 0 0}
+  .info .more{margin:0 0 0 auto}
+}
+@media (prefers-reduced-motion:reduce){.panel,.scrim,.more{transition:none}}
 
-        /* --- ACADEMIC PROSE BLOCKS --- */
-        .prose-block { 
-            max-width: 650px; 
-            margin: 0 auto; 
-            font-size: 1.3rem; 
-            line-height: 1.85; 
-            color: #222222; 
-        }
-        
-        /* Generous Spacing Buffers */
-        .space-above-scrolly {
-            padding-top: 10vh;
-            padding-bottom: 45vh; /* This massive space lets your text fade away into white space before the videos appear */
-            background: #ffffff;
-        }
+/* hover readout */
+.tip{position:fixed;z-index:20;pointer-events:none;background:rgba(28,28,28,.92);color:#f5f1e9;font-size:12px;line-height:1.4;padding:6px 9px;border-radius:3px;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:0;transform:translateY(2px);transition:opacity .12s,transform .12s}
+.tip.on{opacity:1;transform:none}
+.tip b{font-weight:620}
+.tip .k{color:rgba(245,241,233,.62)}
+.chart svg .hit{cursor:crosshair}
+.chart .hl-dim{opacity:.18;transition:opacity .15s}
+/* draw-in, only when motion is allowed */
+@media (prefers-reduced-motion:no-preference){
+  .anim .pt{opacity:0}
+  .anim.in .pt{transition:opacity .5s ease;opacity:1}
+}
+/* replay button */
+.replay{all:unset;cursor:pointer;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:11px;color:var(--muted);border:1px solid var(--hair);border-radius:3px;padding:0 5px;line-height:17px}
+.replay:hover,.replay:focus-visible{color:var(--ink);border-color:var(--muted)}
+/* terminal intro */
+.term{position:fixed;inset:0;z-index:30;background:#151515;color:#e9e4d8;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:14px;line-height:1.6;display:flex;align-items:center;justify-content:center;transition:background-color .6s ease,opacity .5s ease .25s;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.term[hidden]{display:none}
+.term .win{width:min(760px,100%);cursor:text}
+.term .bar{display:flex;gap:7px;margin-bottom:18px}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#3a3a3a}
+.term .ps{color:#8fb0e6}
+.term .cmd{word-break:break-all}
+.term .dim{color:#8a867e}
+.term .ok{color:#a9c79a}
+.term .cur{display:inline-block;width:.6em;height:1.1em;vertical-align:-.2em;background:#e9e4d8;animation:blink 1s steps(1) infinite}
+.term .hint{margin-top:22px;color:#e9e4d8}
+.term .hint kbd{font:inherit;border:1px solid #5a5850;border-radius:3px;padding:0 6px;margin:0 2px}
+.term .out{white-space:pre;overflow:hidden}
+.term .skip{position:absolute;right:max(24px,env(safe-area-inset-right,0px));bottom:max(20px,env(safe-area-inset-bottom,0px));font-size:12px;color:#8a867e;background:none;border:0;cursor:pointer;font-family:inherit}
+.term .skip:hover,.term .skip:focus-visible{color:#e9e4d8}
+.term.leaving{background:#f5f1e9;opacity:0}
+.term.leaving .win,.term.leaving .skip{opacity:0;transition:opacity .2s}
+@keyframes blink{50%{opacity:0}}
+@media (max-width:640px){.term{font-size:12px;align-items:flex-start;padding-top:22vh}.term .out{white-space:pre-wrap}}
+@media (prefers-reduced-motion:reduce){.term .cur{animation:none}.term{transition:none}}
 
-        /* --- SCROLLYTELLING INFRASTRUCTURE --- */
-        .avalanche-container { 
-            position: relative; 
-            /* Blends from white to dark slate, holds at deep black, then blends back to white */
-            background: linear-gradient(to bottom, 
-                #ffffff 0%, 
-                #16161d 15%, 
-                #07070a 30%, 
-                #07070a 85%,
-                #ffffff 100%
-            ); 
-        } 
-        
-        .sticky-viewport { 
-            position: sticky; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: transparent; 
-        }
-        
-        /* The Text Cards floating above the videos */
-        .scroll-narrative { position: relative; z-index: 10; pointer-events: none; margin-top: -100vh; }
-        .trigger-step { height: 220vh; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
-        
-        .trigger-card { 
-            background: rgba(255, 255, 255, 0.97); 
-            border: 1px solid #e5e5e5; 
-            color: #111111; 
-            padding: 2.5rem; 
-            border-radius: 16px; 
-            max-width: 420px; 
-            text-align: center; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
-            font-family: "Times New Roman", Times, serif;
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
-
-        /* --- SIMULATED PHONE PLACEMENTS --- */
-        .phone-mockup { 
-            position: absolute; 
-            width: 290px; 
-            height: 520px; 
-            border-radius: 32px; 
-            border: 4px solid #33333b; 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6); 
-            overflow: hidden; 
-            opacity: 0; 
-            transform: scale(0.6) translate(0, 120px); 
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            color: #ffffff; 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-            font-weight: bold; 
-        }
-        
-        .phone-mockup[data-video="1"] { top: 15%; left: 38%; transform: rotate(-4deg) scale(0.9); z-index: 2; background: #1e272e; }
-        .phone-mockup[data-video="2"] { top: 22%; left: 15%; transform: rotate(6deg) scale(0.95); z-index: 3; background: #3d3d3d; }
-        .phone-mockup[data-video="3"] { top: 10%; left: 60%; transform: rotate(-8deg) scale(0.85); z-index: 4; background: #2c3e50; }
-        .phone-mockup[data-video="4"] { top: 32%; left: 48%; transform: rotate(10deg) scale(1.05); z-index: 5; background: #1e1e24; }
-
-        .phone-mockup.visible { opacity: 1; transform: none !important; }
-        .phone-mockup span { font-size: 1.4rem; margin-bottom: 8px; }
-        .phone-mockup p { font-size: 0.85rem; font-weight: normal; opacity: 0.7; margin: 0 20px; text-align: center; line-height: 1.4; }
-
-        /* --- OUTRO BLOCK --- */
-        .outro-block {
-            background: #ffffff;
-            position: relative;
-            z-index: 15;
-            padding-top: 30vh; /* Deep space before the final prose hits */
-            padding-bottom: 15vh;
-        }
-
-        /* Simple breathing animation for the hero pointer */
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: translateY(0); }
-            50% { opacity: 1; transform: translateY(4px); }
-        }
-    </style>
+.lock{overflow:hidden}
+</style>
 </head>
 <body>
+<div class="term" id="term" role="dialog" aria-label="Intro" tabindex="-1">
+  <div class="win">
+    <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div><span class="ps">ajt@stanford ~ %</span> <span class="cmd" id="t-cmd"></span><span class="cur" aria-hidden="true"></span></div>
+    <div class="out" id="t-out"></div>
+    <div class="hint" id="t-hint" hidden></div>
+  </div>
+  <button class="skip" id="t-skip">skip intro →</button>
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<main>
 
-    <!-- 1. INTRO HERO COVER -->
-    <div class="hero-cover">
-        <div class="essay-header">
-            <div class="essay-metadata">Program in Writing and Rhetoric | PWR 1</div>
-            <h1 class="essay-title">The Architecture of Doubt</h1>
-            <div class="essay-subtitle">Algorithmic Cascades and the Erosion of Scientific Certainty in the Digital Commons</div>
-            <div class="essay-author">By Alex</div>
-            <div class="scroll-indicator">Scroll down to begin reading</div>
-        </div>
+<header class="grid">
+  <div class="who">
+    <h1>Alex Thomas</h1>
+    <p>Engineering physics at Stanford. Batteries, X-ray scattering, robots.</p>
+  </div>
+  <nav><a href="mailto:ajthom@stanford.edu">Email</a><a href="Alexander-Thomas-Resume.pdf">Resume</a><a href="https://github.com/ajt-k">GitHub</a><a href="https://www.linkedin.com/in/ajthom">LinkedIn</a><button class="replay" id="replay" title="Replay the intro" aria-label="Replay the intro">&gt;_</button></nav>
+  <div class="affil" aria-label="Affiliations"><img src="img/logo-stanford.png" alt="Stanford University" height="22"><img src="img/logo-slac.png" alt="SLAC National Accelerator Laboratory" height="22"><span>Research funded by the U.S. Department of Energy</span></div>
+</header>
+
+<!-- Group: ML for science -->
+<section class="group grid" style="margin-top:56px">
+  <div class="gwrap"><h2 class="gtitle">ML for Science: aqueous batteries</h2><p>My goal is simple: accelerate scientific research by orders of magnitude, by bridging physics, computer science, control theory and electro-mechanical engineering.</p></div>
+</section>
+
+<!-- Robot: intro -->
+<section class="plate grid" id="platform" style="border-top:0;padding-top:0;margin-top:28px">
+  <div class="lead">
+    <h2>Automated robotic platform</h2>
+    <p>A modular platform for lab-scale optimization and characterization of battery materials.</p>
+  </div>
+  <div class="fig-l"><video class="vloop" src="img/rack-loop.mp4" poster="img/rack-loop-poster.jpg" autoplay muted loop playsinline aria-label="Short loop of the fluid rack and test cells"></video><div class="mini">Reactor setup for automated testing</div></div>
+  <div class="info">
+    <p class="meta">Stanford Robotics Center · SLAC · 2026</p>
+    <div class="mine"><div class="ml">Key contributions</div><ul><li>Principal autonomy and AI engineer: scheduler, control system and ML feedback loop</li><li>Fluidics design: designed and built the fluid rack</li><li>Robotics automation, including the computer-to-computer link and its communication protocol</li><li>Automatic analysis script</li></ul></div>
+    <dl class="stats">
+      <div><dt>Throughput</dt><dd>80 electrolytes/day</dd></div>
+      <div><dt>Reactor uptime</dt><dd>95%</dd></div>
+      <div><dt>Build time</dt><dd>3 months</dd></div>
+      <div><dt>Robot</dt><dd>force-sensing arm</dd></div>
+      <div><dt>Design</dt><dd>modular</dd></div>
+    </dl>
+    <button class="more" data-k="robot">More →</button>
+  </div>
+</section>
+
+<!-- SAXS -->
+<section class="plate grid">
+  <div class="lead">
+    <h2>Electrolyte optimization using X-ray + ML</h2>
+    <p>Made 200 batteries across 100+ electrolytes to build the dataset, then used X-ray scattering (SAXS) to correlate microscale structure with battery performance.</p>
+  </div>
+  <div class="fig-l"><div class="chart" id="c-dens"></div></div>
+  <div class="info">
+    <p class="meta">SLAC National Accelerator Laboratory · Summer 2026</p>
+    <div class="mine"><div class="ml">Key contributions</div><ul><li>Built the dataset: made 200 batteries and measured every electrolyte</li><li>Did all of the analysis and modeling</li></ul></div>
+    <p class="desc keep">Goal: a closed Bayesian optimization loop built on X-ray measurements.</p>
+    <p class="desc keep">Fundamental friction: data quantity. That is why I built the <a class="uplink" href="#platform">automated testing platform&nbsp;↑</a></p>
+    <dl class="stats">
+      <div><dt>Electrolytes</dt><dd>104</dd></div>
+      <div><dt>q range</dt><dd>0.059–3.12 Å⁻¹</dd></div>
+      <div><dt>Density R²</dt><dd>0.80 · random splits</dd></div>
+      <div><dt>Conductivity R²</dt><dd>0.54 · families held out</dd></div>
+      <div><dt>CE R²</dt><dd>≈ 0 · noise ceiling 0.6–0.8</dd></div>
+    </dl>
+    <button class="more" data-k="saxs">Method →</button>
+  </div>
+  <div class="fig-a"><div class="chart" id="c-cond"></div><div class="mini">Conductivity, with whole cosolvent families held out of training</div></div>
+  <div class="fig-b"><div class="chart" id="c-cep"></div><div class="mini">Coulombic efficiency: predictions stay flat near the mean</div></div>
+  <div class="fig-c"><div class="chart" id="c-learn"></div><div class="mini">Held-out R² as the training set grows, families held out</div></div>
+</section>
+
+<!-- Robot: build -->
+<section class="plate grid">
+  <div class="lead">
+    <h2>Platform design and build</h2>
+    <p>Designed and built at the Stanford Robotics Center in 3 months.</p>
+  </div>
+  <div class="fig-v fig-v2"><video class="vdemo" src="img/robot-demo.mp4" poster="img/robot-demo-poster.jpg" controls muted preload="none" playsinline aria-label="Demo video, 2x speed"></video><div class="mini"><span class="todo">[fill in: caption for the demo video]</span></div></div>
+  <div class="fig-s"><img class="photo wide" src="img/rack-render-1.jpg" alt="Render of the fluid rack design"><div class="mini">Rack design, rendered</div></div>
+  <div class="fig-s"><img class="photo wide" src="img/rack-built.jpg" alt="The built fluid rack with peristaltic pumps next to a robot arm"><div class="mini">The rack, built</div></div>
+  <div class="fig-full"><div class="scroll-x"><img class="sched-img" src="img/scheduler-plan.webp" alt="Scheduler plan: 35 runs on 4 reactors over 4 hours 51 minutes"></div><div class="mini">Scheduler plan for one batch: 35 runs on 4 reactors in 4 h 51 min. One shared balance serializes the fills, and each reactor measures while the next fill is dosed.</div></div>
+  <div class="fig-full"><div class="scroll-x"><img class="sched-img" src="img/scheduler-live.webp" alt="Live control dashboard showing every device on one timeline"></div><div class="mini">Live control dashboard: every pump, valve, stirrer, reactor and potentiostat channel on one timeline</div></div>
+</section>
+
+<!-- Flow battery -->
+<section class="plate grid">
+  <div class="lead">
+    <h2>Initial testing: zinc–iodide flow batteries</h2>
+    <p>Early-stage testing I did in high school. Full vertical integration: I built every part of a zinc–iodide flow battery from scratch.</p>
+  </div>
+  <div class="fig-l">
+    <p class="cadhead">Four casing designs, modeled in Fusion 360 and 3D printed</p>
+    <div class="cad">
+      <figure><img src="img/cad-1.webp" alt="Cylindrical casing with flanged port"><figcaption>1</figcaption></figure>
+      <figure><img src="img/cad-2.webp" alt="Flat frame casing with bolt tabs"><figcaption>2</figcaption></figure>
+      <figure><img src="img/cad-3.webp" alt="Half-cylinder casing with flange plate"><figcaption>3</figcaption></figure>
+      <figure><img src="img/cad-4.webp" alt="Rounded rectangular casing with conical port"><figcaption>4</figcaption></figure>
     </div>
+  </div>
+  <div class="info">
+    <p class="meta">Independent project · Kenya · 2024–25</p>
+    <div class="mine"><div class="ml">Key contributions</div><ul><li>Everything, solo: casing design, printing, electrodes, membranes, test circuit and testing</li></ul></div>
+    <p class="desc"><span class="todo">[fill in: 2–3 sentences]</span></p>
+    <dl class="stats">
+      <div><dt>Duration</dt><dd>8 months</dd></div>
+      <div><dt>Casing designs</dt><dd>4</dd></div>
+      <div><dt>Test cells</dt><dd>50 mAh, 20+ cycles</dd></div>
+      <div><dt>Capacity loss, early tests</dt><dd>&lt; 1% per cycle</dd></div>
+      <div><dt>Test circuit cost</dt><dd>&lt; $10</dd></div>
+    </dl>
+    <button class="more" data-k="flow">Build log →</button>
+  </div>
+  <div class="fig-a"><img class="photo" src="img/flow-cell.jpg" alt="Printed flow cell filled with iodide electrolyte"><div class="mini">A printed cell with electrolyte</div></div>
+  <div class="fig-b"><div class="chart" id="c-ki3"></div><div class="mini">Current vs. time at five KI₃ concentrations</div></div>
+  <div class="fig-c"><div class="strips" id="strips"><img src="img/zinc-coatings.webp" alt="Five zinc anode strips with coatings of decreasing darkness"><ol><li>2.5 M</li><li>2.0 M</li><li>1.5 M</li><li>1.0 M</li><li>0.5 M</li></ol></div><div class="mini">Coatings left on the zinc anode after testing</div></div>
+</section>
 
-    <!-- 2. THE MONOLOGUE (With generous spacing buffers) -->
-    <div class="prose-block space-above-scrolly">
-        <p>I wake up each morning at 8:00. I throw on my clothes, head to the dining hall, and grab a quick coffee. As a Stanford student, I rush to my PWR 1 class—I'm already a minute late. After a successful, exhausting class, I step out onto the quad and open my phone.</p>
-    </div>
+<!-- Options -->
+<section class="plate grid gplate">
+  <div class="lead">
+    <h2 class="gtitle">Options backtesting: 2.3 Sharpe</h2>
+    <p>Working out market inefficiencies in search of alpha. A side project: in free time outside research, I make incremental improvements to the algorithm.</p>
+  </div>
+  <div class="fig-l"><div class="chart" id="c-ohist"></div></div>
+  <div class="info">
+    <p class="meta">Personal project · no real money traded</p>
+    <div class="mine"><div class="ml">Key contributions</div><ul><li>All of it: data pipeline, research, statistics and validation</li></ul></div>
+    <p class="desc"><span class="todo">[fill in: 2–3 sentences]</span></p>
+    <dl class="stats">
+      <div><dt>Events studied</dt><dd>815</dd></div>
+      <div><dt>Signal correlation</dt><dd>ρ = +0.13, positive every year</dd></div>
+      <div><dt>Unseen data, mean per pick</dt><dd>+42.6% vs. +15.0%</dd></div>
+      <div><dt>vs. random selections</dt><dd>beats 99.8%</dd></div>
+      <div><dt>Walk-forward log Sharpe</dt><dd>1.46 vs. 0.77</dd></div>
+      <div><dt>Max drawdown</dt><dd>36.7% vs. 65.6%</dd></div>
+    </dl>
+    <button class="more" data-k="options">How it's built →</button>
+  </div>
+  <div class="fig-a"><div class="chart" id="c-oeq"></div><div class="mini">Walk-forward, Jan 2024 – Apr 2026, rule re-fit each January on earlier data only</div></div>
+  <div class="fig-b"><div class="chart" id="c-oq"></div><div class="mini">All 815 events, split into fifths by signal strength</div></div>
+  <div class="fig-c"><div class="chart" id="c-oy"></div><div class="mini">2024: taking everything lost money; the rule's picks didn't</div></div>
+</section>
 
-    <!-- 3. THE ALGORITHMIC DESCENT (Smooth white-to-black gradient) -->
-    <div class="avalanche-container">
-        <div class="sticky-viewport">
-            <!-- Video Box 1 -->
-            <div class="phone-mockup" data-video="1">
-                <span>📱 Video 1</span>
-                <p>[Instagram Reel: White plumes crisscrossing a blue sky]</p>
-            </div>
-            <!-- Video Box 2 -->
-            <div class="phone-mockup" data-video="2">
-                <span>📱 Video 2</span>
-                <p>[TikTok: Zoomed-in grainy footage of a jet turbine engine]</p>
-            </div>
-            <!-- Video Box 3 -->
-            <div class="phone-mockup" data-video="3">
-                <span>📱 Video 3</span>
-                <p>[Reel: "They aren't hiding it anymore" overlay text]</p>
-            </div>
-            <!-- Video Box 4 -->
-            <div class="phone-mockup" data-video="4">
-                <span>📱 Video 4</span>
-                <p>[TikTok: Overlapping soundbytes and voiceover grids]</p>
-            </div>
-        </div>
+<!-- Earlier -->
+<section class="plate grid tiles tiles4 gplate">
+  <div class="label"><h2 class="gtitle">Earlier</h2></div>
+  <div class="tile" data-k="interf" tabindex="0" role="button"><img class="photo" src="img/interferometer-beam.jpg" alt="Laser beams crossing a home-built interferometer in a dark room"><div class="t">Laser interferometer</div><div class="d">Dorm-room build · under $10 · detects footsteps and voices</div></div>
+  <div class="tile" data-k="fire" tabindex="0" role="button"><img class="photo" src="img/fire-predictions.webp" alt="Grid of fire spread maps from the model"><div class="t">Forest fire spread model</div><div class="d">2023–25 · 82,140 fires, convolutional nets</div></div>
+  <div class="tile" data-k="hydro" tabindex="0" role="button"><img class="photo" src="img/hydroponics.jpg" alt="Hydroponic tubes on a corrugated roof"><div class="t">Rooftop hydroponics</div><div class="d">Kenya · 100 L, 75 plants, ~10 m²</div></div>
+  <div class="tile" data-k="solenoid" tabindex="0" role="button"><div class="chart" id="c-sol"></div><div class="t">Solenoid end field</div><div class="d">IB physics · B ∝ I, 16% above theory</div></div>
+  <div class="also-line" data-k="embassy" tabindex="0" role="button">Also: <b>Energy analyst, US Embassy Nairobi</b> (2024) · five years of electricity data across 150+ properties, and a solar plan with a five-year return model →</div>
+</section>
 
-        <!-- Scroll Narrative Overlay -->
-        <div class="scroll-narrative">
-            <div class="trigger-step" data-step="1">
-                <div class="trigger-card">Instead of more text, the smooth, interactive scrolling goes to an instagram clip of chemtrails.</div>
-            </div>
-            <div class="trigger-step" data-step="2">
-                <div class="trigger-card">Then a small page break and another one layered...</div>
-            </div>
-            <div class="trigger-step" data-step="3">
-                <div class="trigger-card">Then two of them layered...</div>
-            </div>
-            <div class="trigger-step" data-step="4">
-                <div class="trigger-card">Then more and more with audio getting confusing and then...</div>
-            </div>
-        </div>
-    </div>
+<!-- Otherwise -->
+<section class="plate grid gplate otherwise">
+  <div class="label"><h2 class="gtitle">Otherwise</h2></div>
+  <p class="o1">Outside of work and school, I love to play piano, think about philosophy, and play tennis.</p>
+  <p class="o2">Currently: taking a film class, building a home LLM server, and bringing the options project to production.</p>
+</section>
 
-    <!-- 4. THE SNAP-BACK OUTRO (Fades cleanly back to white) -->
-    <div class="outro-block">
-        <div class="prose-block">
-            <p><strong>I close my phone.</strong></p>
-            <p>I'm not a chemtrails believer. I understand the physics of contrail formation. I've worked with atmospheric satellite data in the past, I have faith in the science. I generally find too many logical holes in this absurd argument to give it much faith. But upon watching 10+ videos like this in a row, I start to question whether I should be so sure of myself.</p>
-            <p>The brilliance behind this kind of format is that it would be immediately engaging, and really would show the alternative appeal that these videos have. They make you scared immediately. It would give so much context for what the average person exposed to this stuff sees: otherwise, it's all guesswork.</p>
-        </div>
-    </div>
+<footer><span>ajthom@stanford.edu</span><nav><a href="Alexander-Thomas-Resume.pdf">Resume</a><a href="https://github.com/ajt-k">GitHub</a><a href="https://www.linkedin.com/in/ajthom">LinkedIn</a></nav></footer>
+</main>
 
-    <script>
-        const scroller = scrollama();
-        
-        const videoCards = {
-            1: [document.querySelector('[data-video="1"]')],
-            2: [document.querySelector('[data-video="2"]')],
-            3: [document.querySelector('[data-video="3"]'), document.querySelector('[data-video="4"]')]
-        };
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-hidden="true"></aside>
 
-        scroller
-            .setup({
-                step: '.trigger-step',
-                offset: 0.5, // Triggers perfectly in the vertical center of the screen
-                debug: false
-            })
-            .onStepEnter(response => {
-                const step = response.element.dataset.step;
-                
-                if (step === "1") {
-                    videoCards[1][0].classList.add('visible');
-                } else if (step === "2") {
-                    videoCards[2][0].classList.add('visible');
-                } else if (step === "3" || step === "4") {
-                    videoCards[3].forEach(card => card.classList.add('visible'));
-                }
-            })
-            .onStepExit(response => {
-                if (response.direction === "up") {
-                    const step = response.element.dataset.step;
-                    if (step === "1") {
-                        videoCards[1][0].classList.remove('visible');
-                    } else if (step === "2") {
-                        videoCards[2][0].classList.remove('visible');
-                    } else if (step === "3") {
-                        videoCards[3].forEach(card => card.classList.remove('visible'));
-                    }
-                }
-            });
+<script>
+const DATA={"saxs":{"c1":[[0.0583,496.8],[0.0599,494.9],[0.0615,493.0],[0.0632,491.1],[0.0649,491.1],[0.0667,491.1],[0.0685,493.0],[0.0704,494.9],[0.0723,496.8],[0.0743,496.8],[0.0763,496.8],[0.0784,496.8],[0.0806,496.8],[0.0828,496.8],[0.085,496.8],[0.0874,494.9],[0.0898,493.0],[0.0922,493.0],[0.0947,493.0],[0.0973,493.0],[0.1,494.9],[0.1027,496.8],[0.1056,496.8],[0.1084,496.8],[0.1114,496.8],[0.1145,496.8],[0.1176,496.8],[0.1208,496.8],[0.1241,496.8],[0.1275,496.8],[0.131,496.8],[0.1346,496.8],[0.1383,496.8],[0.1421,496.8],[0.146,496.8],[0.15,496.8],[0.1541,496.8],[0.1583,496.8],[0.1626,496.8],[0.1671,496.8],[0.1716,496.8],[0.1763,496.8],[0.1812,496.8],[0.1861,496.8],[0.1912,496.8],[0.1965,496.8],[0.2018,496.8],[0.2074,494.9],[0.213,494.9],[0.2189,494.9],[0.2249,493.0],[0.231,491.1],[0.2373,491.1],[0.2438,489.2],[0.2505,487.3],[0.2574,487.3],[0.2644,487.3],[0.2717,487.3],[0.2791,487.3],[0.2867,487.3],[0.2946,487.3],[0.3026,487.3],[0.3109,487.3],[0.3194,487.3],[0.3282,487.3],[0.3372,487.3],[0.3464,487.3],[0.3559,487.3],[0.3656,487.3],[0.3756,489.2],[0.3859,491.1],[0.3965,493.0],[0.4074,494.9],[0.4185,496.8],[0.43,496.8],[0.4417,496.8],[0.4538,496.8],[0.4663,496.8],[0.479,496.8],[0.4921,496.8],[0.5056,498.7],[0.5194,500.6],[0.5337,504.4],[0.5483,508.2],[0.5633,512.0],[0.5787,513.9],[0.5946,517.7],[0.6108,521.5],[0.6276,525.3],[0.6447,531.0],[0.6624,538.6],[0.6805,544.3],[0.6992,550.0],[0.7183,557.6],[0.738,565.2],[0.7582,572.8],[0.7789,582.3],[0.8003,591.8],[0.8222,603.2],[0.8447,614.6],[0.8678,626.0],[0.8916,639.2],[0.916,654.4],[0.941,669.6],[0.9668,688.6],[0.9933,711.4],[1.0205,736.1],[1.0484,764.6],[1.0771,796.8],[1.1066,834.8],[1.1369,876.6],[1.168,925.9],[1.2,981.0],[1.2328,1043.7],[1.2666,1113.9],[1.3013,1195.6],[1.3369,1288.6],[1.3735,1396.8],[1.4111,1522.1],[1.4497,1666.5],[1.4894,1833.5],[1.5302,2027.2],[1.5721,2249.4],[1.6151,2500.0],[1.6594,2777.2],[1.7048,3075.3],[1.7515,3379.1],[1.7994,3669.6],[1.8487,3931.6],[1.8993,4138.6],[1.9513,4271.5],[2.0047,4317.1],[2.0596,4284.8],[2.116,4182.3],[2.1739,4032.3],[2.2334,3859.5],[2.2946,3688.6],[2.3574,3529.1],[2.4219,3394.3],[2.4883,3291.8],[2.5564,3215.8],[2.6264,3160.7],[2.6983,3119.0],[2.7721,3065.8],[2.848,2976.6],[2.926,2841.8],[3.0061,2714.5],[3.0884,2596.8]],"c2":[[0.0583,5646.2],[0.0599,5650.0],[0.0615,5651.9],[0.0632,5655.7],[0.0649,5659.5],[0.0667,5657.6],[0.0685,5653.8],[0.0704,5651.9],[0.0723,5648.1],[0.0743,5644.3],[0.0763,5644.3],[0.0784,5648.1],[0.0806,5650.0],[0.0828,5651.9],[0.085,5653.8],[0.0874,5655.7],[0.0898,5653.8],[0.0922,5653.8],[0.0947,5657.6],[0.0973,5659.5],[0.1,5661.4],[0.1027,5667.1],[0.1056,5672.8],[0.1084,5676.6],[0.1114,5684.1],[0.1145,5686.0],[0.1176,5687.9],[0.1208,5689.8],[0.1241,5689.8],[0.1275,5689.5],[0.131,5694.4],[0.1346,5696.3],[0.1383,5698.2],[0.1421,5702.0],[0.146,5706.2],[0.15,5708.8],[0.1541,5712.6],[0.1583,5716.4],[0.1626,5720.2],[0.1671,5724.0],[0.1716,5727.8],[0.1763,5731.6],[0.1812,5735.4],[0.1861,5741.1],[0.1912,5744.9],[0.1965,5752.5],[0.2018,5760.1],[0.2074,5767.7],[0.213,5773.4],[0.2189,5779.1],[0.2249,5782.9],[0.231,5788.6],[0.2373,5796.2],[0.2438,5801.9],[0.2505,5809.5],[0.2574,5817.1],[0.2644,5824.7],[0.2717,5832.2],[0.2791,5839.8],[0.2867,5849.3],[0.2946,5856.9],[0.3026,5866.4],[0.3109,5874.0],[0.3194,5883.5],[0.3282,5893.0],[0.3372,5904.4],[0.3464,5912.0],[0.3559,5921.5],[0.3656,5931.0],[0.3756,5938.6],[0.3859,5946.2],[0.3965,5953.8],[0.4074,5961.4],[0.4185,5967.1],[0.43,5970.9],[0.4417,5974.7],[0.4538,5978.4],[0.4663,5978.4],[0.479,5978.4],[0.4921,5976.6],[0.5056,5970.9],[0.5194,5963.3],[0.5337,5957.6],[0.5483,5948.1],[0.5633,5938.6],[0.5787,5929.1],[0.5946,5917.7],[0.6108,5902.5],[0.6276,5885.4],[0.6447,5866.4],[0.6624,5843.6],[0.6805,5819.0],[0.6992,5794.3],[0.7183,5769.6],[0.738,5743.0],[0.7582,5714.5],[0.7789,5684.1],[0.8003,5651.9],[0.8222,5617.7],[0.8447,5579.7],[0.8678,5543.6],[0.8916,5509.5],[0.916,5475.3],[0.941,5444.9],[0.9668,5420.2],[0.9933,5397.4],[1.0205,5376.6],[1.0484,5359.5],[1.0771,5346.2],[1.1066,5338.6],[1.1369,5336.7],[1.168,5342.4],[1.2,5353.8],[1.2328,5372.8],[1.2666,5401.2],[1.3013,5439.2],[1.3369,5490.5],[1.3735,5556.9],[1.4111,5634.8],[1.4497,5727.8],[1.4894,5839.8],[1.5302,5970.9],[1.5721,6122.8],[1.6151,6293.6],[1.6594,6479.7],[1.7048,6667.7],[1.7515,6844.3],[1.7994,6996.2],[1.8487,7110.1],[1.8993,7168.9],[1.9513,7167.0],[2.0047,7108.2],[2.0596,6996.2],[2.116,6848.1],[2.1739,6681.0],[2.2334,6513.9],[2.2946,6356.3],[2.3574,6217.7],[2.4219,6100.0],[2.4883,6006.9],[2.5564,5932.9],[2.6264,5877.8],[2.6983,5830.3],[2.7721,5779.1],[2.848,5714.5],[2.926,5627.2],[3.0061,5543.6],[3.0884,5471.5]],"c3":[[0.0583,6671.5],[0.0599,6656.3],[0.0615,6637.3],[0.0632,6610.7],[0.0649,6586.0],[0.0667,6561.4],[0.0685,6540.5],[0.0704,6519.6],[0.0723,6502.5],[0.0743,6483.5],[0.0763,6462.6],[0.0784,6439.8],[0.0806,6415.2],[0.0828,6386.7],[0.085,6358.2],[0.0874,6325.9],[0.0898,6293.6],[0.0922,6259.5],[0.0947,6225.3],[0.0973,6191.1],[0.1,6158.8],[0.1027,6120.9],[0.1056,6084.8],[0.1084,6046.8],[0.1114,6006.9],[0.1145,5965.2],[0.1176,5925.3],[0.1208,5879.7],[0.1241,5832.2],[0.1275,5784.8],[0.131,5735.4],[0.1346,5680.4],[0.1383,5625.3],[0.1421,5569.7],[0.146,5512.2],[0.15,5456.4],[0.1541,5404.3],[0.1583,5354.1],[0.1626,5304.6],[0.1671,5250.1],[0.1716,5193.8],[0.1763,5133.9],[0.1812,5072.1],[0.1861,5006.3],[0.1912,4944.8],[0.1965,4881.8],[0.2018,4819.2],[0.2074,4755.1],[0.213,4693.3],[0.2189,4628.9],[0.2249,4564.4],[0.231,4500.0],[0.2373,4435.0],[0.2438,4371.4],[0.2505,4305.6],[0.2574,4241.3],[0.2644,4178.5],[0.2717,4117.7],[0.2791,4056.9],[0.2867,4000.0],[0.2946,3943.0],[0.3026,3888.0],[0.3109,3832.9],[0.3194,3777.8],[0.3282,3726.6],[0.3372,3675.3],[0.3464,3624.0],[0.3559,3574.7],[0.3656,3529.1],[0.3756,3483.5],[0.3859,3439.9],[0.3965,3400.0],[0.4074,3362.0],[0.4185,3324.0],[0.43,3289.9],[0.4417,3257.6],[0.4538,3225.3],[0.4663,3196.8],[0.479,3170.2],[0.4921,3143.7],[0.5056,3120.9],[0.5194,3101.9],[0.5337,3084.8],[0.5483,3069.6],[0.5633,3058.2],[0.5787,3048.7],[0.5946,3039.2],[0.6108,3031.6],[0.6276,3027.8],[0.6447,3025.9],[0.6624,3027.8],[0.6805,3033.5],[0.6992,3041.1],[0.7183,3052.5],[0.738,3065.8],[0.7582,3079.1],[0.7789,3094.3],[0.8003,3111.4],[0.8222,3130.4],[0.8447,3149.4],[0.8678,3170.2],[0.8916,3194.9],[0.916,3225.3],[0.941,3257.6],[0.9668,3297.5],[0.9933,3344.9],[1.0205,3396.2],[1.0484,3449.4],[1.0771,3510.1],[1.1066,3576.6],[1.1369,3650.6],[1.168,3732.3],[1.2,3825.3],[1.2328,3927.8],[1.2666,4039.9],[1.3013,4163.3],[1.3369,4300.0],[1.3735,4448.1],[1.4111,4605.7],[1.4497,4774.7],[1.4894,4949.3],[1.5302,5125.9],[1.5721,5302.5],[1.6151,5473.4],[1.6594,5627.2],[1.7048,5760.1],[1.7515,5866.4],[1.7994,5936.7],[1.8487,5972.8],[1.8993,5970.9],[1.9513,5927.2],[2.0047,5843.6],[2.0596,5725.9],[2.116,5579.7],[2.1739,5412.6],[2.2334,5239.8],[2.2946,5069.0],[2.3574,4905.7],[2.4219,4757.6],[2.4883,4628.5],[2.5564,4520.2],[2.6264,4431.0],[2.6983,4358.8],[2.7721,4288.6],[2.848,4214.5],[2.926,4115.8],[3.0061,4028.5],[3.0884,3952.5]],"c4":[[0.0583,5120.2],[0.0599,5122.1],[0.0615,5116.4],[0.0632,5110.7],[0.0649,5105.0],[0.0667,5093.6],[0.0685,5087.9],[0.0704,5089.8],[0.0723,5095.5],[0.0743,5099.3],[0.0763,5101.2],[0.0784,5101.2],[0.0806,5106.9],[0.0828,5108.8],[0.085,5108.8],[0.0874,5110.7],[0.0898,5114.5],[0.0922,5112.6],[0.0947,5112.6],[0.0973,5114.5],[0.1,5114.5],[0.1027,5114.5],[0.1056,5114.5],[0.1084,5112.6],[0.1114,5114.5],[0.1145,5118.3],[0.1176,5120.2],[0.1208,5122.1],[0.1241,5125.9],[0.1275,5124.0],[0.131,5124.0],[0.1346,5124.0],[0.1383,5125.9],[0.1421,5125.9],[0.146,5127.8],[0.15,5127.8],[0.1541,5129.7],[0.1583,5129.7],[0.1626,5128.8],[0.1671,5128.8],[0.1716,5128.8],[0.1763,5128.8],[0.1812,5130.7],[0.1861,5131.6],[0.1912,5133.5],[0.1965,5133.5],[0.2018,5135.4],[0.2074,5135.4],[0.213,5137.3],[0.2189,5137.3],[0.2249,5139.2],[0.231,5137.3],[0.2373,5139.2],[0.2438,5141.1],[0.2505,5143.0],[0.2574,5143.0],[0.2644,5146.8],[0.2717,5144.9],[0.2791,5144.9],[0.2867,5144.9],[0.2946,5146.8],[0.3026,5146.8],[0.3109,5148.7],[0.3194,5148.7],[0.3282,5146.8],[0.3372,5143.0],[0.3464,5139.2],[0.3559,5135.4],[0.3656,5131.6],[0.3756,5127.8],[0.3859,5125.9],[0.3965,5122.1],[0.4074,5118.3],[0.4185,5110.7],[0.43,5105.0],[0.4417,5097.4],[0.4538,5089.8],[0.4663,5078.5],[0.479,5069.0],[0.4921,5055.7],[0.5056,5040.5],[0.5194,5025.3],[0.5337,5010.1],[0.5483,4993.0],[0.5633,4975.9],[0.5787,4958.8],[0.5946,4939.8],[0.6108,4920.9],[0.6276,4901.9],[0.6447,4881.0],[0.6624,4860.1],[0.6805,4837.3],[0.6992,4812.6],[0.7183,4788.0],[0.738,4763.3],[0.7582,4736.7],[0.7789,4710.1],[0.8003,4683.5],[0.8222,4655.0],[0.8447,4626.6],[0.8678,4598.1],[0.8916,4571.5],[0.916,4546.8],[0.941,4525.9],[0.9668,4506.9],[0.9933,4493.6],[1.0205,4482.3],[1.0484,4478.5],[1.0771,4478.5],[1.1066,4486.1],[1.1369,4499.3],[1.168,4520.2],[1.2,4548.7],[1.2328,4586.7],[1.2666,4638.0],[1.3013,4702.5],[1.3369,4784.2],[1.3735,4882.9],[1.4111,4996.8],[1.4497,5125.9],[1.4894,5274.0],[1.5302,5435.4],[1.5721,5604.4],[1.6151,5779.1],[1.6594,5946.2],[1.7048,6090.5],[1.7515,6200.6],[1.7994,6263.3],[1.8487,6274.7],[1.8993,6231.0],[1.9513,6139.8],[2.0047,6010.7],[2.0596,5856.9],[2.116,5693.6],[2.1739,5536.0],[2.2334,5391.7],[2.2946,5266.4],[2.3574,5167.7],[2.4219,5089.8],[2.4883,5031.0],[2.5564,4987.3],[2.6264,4956.9],[2.6983,4930.4],[2.7721,4898.1],[2.848,4850.6],[2.926,4778.5],[3.0061,4710.1],[3.0884,4647.4]],"c5":[[0.0583,7066.4],[0.0599,7056.9],[0.0615,7039.8],[0.0632,7017.1],[0.0649,6988.6],[0.0667,6954.4],[0.0685,6924.0],[0.0704,6893.6],[0.0723,6861.4],[0.0743,6832.9],[0.0763,6800.6],[0.0784,6764.5],[0.0806,6728.4],[0.0828,6690.5],[0.085,6646.8],[0.0874,6605.0],[0.0898,6563.3],[0.0922,6519.6],[0.0947,6477.8],[0.0973,6432.2],[0.1,6386.7],[0.1027,6337.3],[0.1056,6287.9],[0.1084,6234.8],[0.1114,6183.5],[0.1145,6126.5],[0.1176,6067.7],[0.1208,6010.7],[0.1241,5953.8],[0.1275,5891.1],[0.131,5828.5],[0.1346,5767.7],[0.1383,5703.1],[0.1421,5634.8],[0.146,5566.4],[0.15,5500.0],[0.1541,5431.6],[0.1583,5361.4],[0.1626,5293.0],[0.1671,5222.8],[0.1716,5150.6],[0.1763,5080.4],[0.1812,5010.1],[0.1861,4942.2],[0.1912,4876.9],[0.1965,4810.6],[0.2018,4743.3],[0.2074,4674.8],[0.213,4603.0],[0.2189,4531.1],[0.2249,4459.3],[0.231,4387.4],[0.2373,4313.5],[0.2438,4240.6],[0.2505,4166.9],[0.2574,4096.2],[0.2644,4026.6],[0.2717,3962.0],[0.2791,3897.5],[0.2867,3838.6],[0.2946,3777.8],[0.3026,3720.9],[0.3109,3663.9],[0.3194,3610.7],[0.3282,3555.7],[0.3372,3504.4],[0.3464,3453.1],[0.3559,3405.7],[0.3656,3358.2],[0.3756,3312.6],[0.3859,3269.0],[0.3965,3227.2],[0.4074,3185.4],[0.4185,3147.5],[0.43,3111.4],[0.4417,3077.2],[0.4538,3043.0],[0.4663,3012.6],[0.479,2982.3],[0.4921,2953.8],[0.5056,2927.2],[0.5194,2904.4],[0.5337,2881.6],[0.5483,2860.7],[0.5633,2841.8],[0.5787,2824.7],[0.5946,2809.5],[0.6108,2794.3],[0.6276,2781.0],[0.6447,2769.6],[0.6624,2760.1],[0.6805,2750.6],[0.6992,2744.9],[0.7183,2741.1],[0.738,2739.2],[0.7582,2735.4],[0.7789,2733.5],[0.8003,2733.5],[0.8222,2733.5],[0.8447,2733.5],[0.8678,2737.3],[0.8916,2743.0],[0.916,2748.7],[0.941,2760.1],[0.9668,2775.3],[0.9933,2794.3],[1.0205,2817.1],[1.0484,2845.6],[1.0771,2877.8],[1.1066,2913.9],[1.1369,2955.7],[1.168,3003.2],[1.2,3058.2],[1.2328,3119.0],[1.2666,3189.2],[1.3013,3267.1],[1.3369,3358.2],[1.3735,3456.9],[1.4111,3567.1],[1.4497,3688.6],[1.4894,3821.5],[1.5302,3960.1],[1.5721,4110.1],[1.6151,4263.9],[1.6594,4417.7],[1.7048,4567.7],[1.7515,4708.2],[1.7994,4825.9],[1.8487,4922.8],[1.8993,4991.1],[1.9513,5023.4],[2.0047,5013.9],[2.0596,4966.4],[2.116,4881.0],[2.1739,4765.2],[2.2334,4628.5],[2.2946,4486.1],[2.3574,4347.4],[2.4219,4222.1],[2.4883,4115.8],[2.5564,4034.2],[2.6264,3975.3],[2.6983,3929.7],[2.7721,3886.1],[2.848,3832.9],[2.926,3753.1],[3.0061,3677.2],[3.0884,3610.7]]},"ki3":{"0.5":[[1.49,326.0],[1.7,326.7],[1.92,339.6],[2.14,336.1],[2.36,333.7],[2.57,330.2],[2.79,325.5],[3.01,320.8],[3.22,313.7],[3.44,304.8],[3.66,294.8],[3.88,283.6],[4.09,263.6],[4.31,252.9],[4.53,244.7],[4.74,236.4],[4.96,230.0],[5.18,223.5],[5.4,216.4],[5.61,208.7],[5.83,201.1],[6.05,193.4],[6.26,184.6],[6.48,177.5],[6.7,169.2],[6.92,161.6],[7.13,152.1],[7.35,143.9],[7.57,134.4],[7.79,125.6],[8.0,118.5],[8.22,110.8],[8.44,105.0],[8.65,97.9],[8.87,91.4],[9.09,87.9],[9.31,83.7],[9.52,81.4],[9.74,78.4],[9.96,76.7],[10.17,74.3],[10.39,71.9],[10.61,70.8],[10.83,69.0],[11.04,67.2],[11.26,66.0],[11.48,63.7],[11.69,62.5],[11.91,61.3],[12.13,60.1],[12.35,59.6],[12.56,58.4],[12.78,57.8],[13.0,56.6],[13.21,55.4],[13.43,54.8],[13.65,53.7],[13.87,53.1],[14.08,52.5],[14.3,52.5],[14.52,51.3],[14.73,50.7],[14.95,49.5],[15.17,49.5],[15.39,48.3],[15.6,48.3],[15.82,47.2],[16.04,47.2],[16.25,46.0],[16.47,46.0],[16.69,45.4],[16.91,44.2],[17.12,44.2],[17.34,43.6],[17.56,43.6],[17.77,43.0],[17.99,42.5],[18.21,42.5],[18.43,41.9],[18.64,41.3],[18.86,40.7],[19.08,40.7],[19.29,39.5],[19.51,40.1],[19.73,39.5],[19.95,39.5],[20.16,38.9],[20.38,38.3],[20.6,38.3],[20.81,37.7],[21.03,37.7],[21.25,37.1],[21.47,36.6],[21.68,36.0],[21.9,36.6],[22.12,36.0],[22.33,35.4],[22.55,36.0],[22.77,35.4],[22.99,34.8],[23.2,34.2],[23.42,34.2],[23.64,34.2],[23.85,33.6],[24.07,33.6],[24.29,33.0],[24.51,33.0],[24.72,32.4],[24.94,32.4],[25.16,32.4],[25.37,32.4],[25.59,31.2],[25.81,32.4],[26.03,31.2],[26.24,31.2],[26.46,30.7],[26.68,31.2],[26.89,30.7],[27.11,30.1],[27.33,30.1],[27.55,30.1],[27.76,29.5],[27.98,29.5],[28.2,29.5],[28.41,29.5],[28.63,28.9],[28.85,28.9],[29.07,28.9],[29.28,28.3],[29.5,28.3],[29.72,27.7],[29.93,28.3],[30.15,28.3],[30.37,27.7],[30.59,27.7],[30.8,27.1],[31.02,27.7],[31.24,27.7],[31.45,27.1],[31.67,27.1],[31.89,26.5],[32.11,25.9],[32.32,25.9],[32.54,25.9],[32.76,25.9],[32.98,25.9],[33.19,25.9],[33.41,25.9],[33.63,25.4],[33.84,25.4],[34.06,25.4],[34.28,24.8],[34.5,24.8],[34.71,24.8],[34.93,24.8],[35.15,24.8],[35.36,24.8],[35.58,24.8],[35.8,24.8],[36.02,24.8],[36.23,24.2],[36.45,23.6],[36.67,23.6],[36.88,23.6],[37.1,23.0],[37.32,23.0],[37.54,23.6],[37.75,23.6],[37.97,23.6],[38.19,23.0],[38.4,23.0],[38.62,23.0],[38.84,23.0],[39.06,22.4],[39.27,22.4],[39.49,23.0],[39.71,23.0],[39.92,23.0],[40.14,22.4],[40.36,22.4],[40.58,22.4],[40.79,22.4],[41.01,21.8],[41.23,21.8],[41.44,21.8],[41.66,21.8],[41.88,21.2],[42.1,21.2],[42.31,21.2],[42.53,21.2],[42.75,21.2],[42.96,21.2],[43.18,21.2],[43.4,21.2],[43.62,21.2],[43.83,21.2],[44.05,21.2],[44.27,21.2],[44.48,21.2],[44.7,21.2],[44.92,20.6],[45.14,20.6],[45.35,20.6],[45.57,20.6],[45.79,20.6],[46.0,20.6],[46.22,20.6],[46.44,20.0],[46.66,20.0],[46.87,20.0],[47.09,20.0],[47.31,20.0],[47.52,20.0],[47.74,20.0],[47.96,19.5],[48.18,19.5],[48.39,19.5],[48.61,20.0],[48.83,20.0],[49.04,20.0],[49.26,20.0],[49.48,19.5],[49.7,19.5],[49.91,19.5],[50.13,19.5],[50.35,19.5],[50.56,19.5],[50.78,19.5],[51.0,19.5],[51.22,18.9],[51.43,18.9],[51.65,18.9],[51.87,18.9],[52.08,18.9],[52.3,18.9],[52.52,19.5],[52.74,19.5],[52.95,19.5],[53.17,19.5],[53.39,19.5],[53.6,19.5],[53.82,18.9],[54.04,18.9],[54.26,18.9],[54.47,18.9],[54.69,18.9],[54.91,18.9],[55.12,18.3],[55.34,18.3],[55.56,18.3],[55.78,18.3],[55.99,18.3],[56.21,18.3],[56.43,17.7],[56.64,17.7],[56.86,17.7],[57.08,17.7]],"1.0":[[1.57,305.4],[1.79,311.9],[2.01,312.5],[2.23,309.6],[2.44,304.2],[2.66,301.9],[2.88,297.8],[3.09,293.0],[3.31,288.9],[3.53,285.4],[3.75,281.8],[3.96,275.9],[4.18,272.4],[4.4,268.3],[4.61,263.6],[4.83,257.7],[5.05,252.4],[5.27,247.1],[5.48,241.2],[5.7,235.3],[5.92,230.5],[6.13,225.2],[6.35,222.3],[6.57,217.0],[6.79,214.0],[7.0,208.7],[7.22,204.6],[7.44,200.5],[7.65,194.0],[7.87,186.9],[8.09,182.2],[8.31,176.9],[8.52,171.6],[8.74,166.9],[8.96,160.4],[9.17,153.9],[9.39,148.6],[9.61,143.9],[9.83,140.3],[10.04,136.8],[10.26,133.8],[10.48,130.9],[10.69,128.5],[10.91,125.6],[11.13,123.8],[11.35,121.5],[11.56,119.1],[11.78,116.7],[12.0,114.4],[12.21,111.4],[12.43,108.5],[12.65,106.1],[12.87,102.0],[13.08,99.1],[13.3,94.3],[13.52,91.4],[13.74,89.0],[13.95,86.7],[14.17,84.3],[14.39,83.1],[14.6,82.0],[14.82,80.2],[15.04,78.4],[15.26,77.2],[15.47,76.1],[15.69,74.9],[15.91,73.7],[16.12,73.1],[16.34,71.9],[16.56,71.3],[16.78,70.8],[16.99,69.6],[17.21,67.8],[17.43,67.8],[17.64,67.8],[17.86,67.2],[18.08,65.4],[18.3,65.4],[18.51,65.4],[18.73,64.3],[18.95,63.7],[19.16,63.1],[19.38,61.9],[19.6,63.1],[19.82,60.7],[20.03,60.7],[20.25,59.6],[20.47,60.1],[20.68,59.6],[20.9,59.6],[21.12,59.0],[21.34,58.4],[21.55,57.8],[21.77,58.4],[21.99,57.2],[22.2,56.0],[22.42,56.6],[22.64,56.0],[22.86,55.4],[23.07,55.4],[23.29,54.8],[23.51,54.8],[23.72,54.2],[23.94,53.7],[24.16,54.2],[24.38,53.1],[24.59,52.5],[24.81,53.7],[25.03,52.5],[25.24,51.3],[25.46,52.5],[25.68,51.9],[25.9,51.3],[26.11,51.3],[26.33,51.3],[26.55,50.7],[26.76,50.1],[26.98,50.1],[27.2,50.1],[27.42,50.1],[27.63,48.9],[27.85,49.5],[28.07,49.5],[28.28,48.9],[28.5,48.9],[28.72,47.8],[28.94,48.9],[29.15,48.3],[29.37,47.8],[29.59,47.8],[29.8,47.2],[30.02,47.2],[30.24,47.2],[30.46,46.6],[30.67,46.6],[30.89,46.6],[31.11,46.6],[31.32,46.6],[31.54,46.6],[31.76,46.0],[31.98,46.0],[32.19,46.6],[32.41,46.0],[32.63,45.4],[32.84,45.4],[33.06,44.8],[33.28,44.2],[33.5,44.8],[33.71,45.4],[33.93,44.8],[34.15,44.2],[34.36,44.2],[34.58,44.2],[34.8,43.0],[35.02,43.0],[35.23,43.6],[35.45,44.2],[35.67,43.6],[35.88,43.0],[36.1,43.0],[36.32,43.0],[36.54,43.0],[36.75,43.0],[36.97,43.0],[37.19,43.0],[37.4,42.5],[37.62,42.5],[37.84,41.9],[38.06,41.9],[38.27,41.9],[38.49,41.9],[38.71,41.9],[38.93,41.9],[39.14,41.9],[39.36,41.9],[39.58,41.9],[39.79,41.3],[40.01,40.7],[40.23,40.7],[40.45,41.3],[40.66,41.3],[40.88,41.9],[41.1,40.7],[41.31,40.7],[41.53,40.7],[41.75,40.1],[41.97,39.5],[42.18,39.5],[42.4,39.5],[42.62,40.1],[42.83,40.7],[43.05,40.7],[43.27,40.1],[43.49,40.1],[43.7,40.1],[43.92,39.5],[44.14,39.5],[44.35,39.5],[44.57,38.9],[44.79,38.3],[45.01,38.3],[45.22,38.3],[45.44,38.9],[45.66,39.5],[45.87,39.5],[46.09,39.5],[46.31,39.5],[46.53,39.5],[46.74,39.5],[46.96,39.5],[47.18,38.9],[47.39,38.3],[47.61,38.3],[47.83,38.3],[48.05,38.3],[48.26,38.3],[48.48,38.3],[48.7,38.3],[48.91,38.3],[49.13,38.3],[49.35,38.3],[49.57,38.3],[49.78,38.3],[50.0,37.7],[50.22,38.3],[50.43,38.3],[50.65,38.3],[50.87,38.3],[51.09,38.3],[51.3,37.7],[51.52,37.7],[51.74,37.7],[51.95,37.7],[52.17,37.7],[52.39,37.7],[52.61,37.7],[52.82,37.7],[53.04,37.7],[53.26,37.7],[53.47,37.7],[53.69,37.7],[53.91,37.7],[54.13,37.7],[54.34,37.7],[54.56,38.3],[54.78,38.3],[54.99,37.7],[55.21,37.7],[55.43,38.3],[55.65,38.3],[55.86,37.7],[56.08,37.7],[56.3,37.7],[56.51,37.7],[56.73,37.1],[56.95,37.1]],"1.5":[[1.4,505.7],[1.62,502.4],[1.83,503.5],[2.05,501.2],[2.27,500.0],[2.49,498.2],[2.7,497.1],[2.92,496.5],[3.14,494.7],[3.36,492.9],[3.57,490.6],[3.79,489.4],[4.01,487.0],[4.22,484.1],[4.44,481.1],[4.66,478.8],[4.88,474.6],[5.09,471.1],[5.31,466.4],[5.53,461.1],[5.74,452.8],[5.96,445.8],[6.18,438.7],[6.4,432.8],[6.61,425.7],[6.83,418.6],[7.05,411.6],[7.26,403.9],[7.48,395.0],[7.7,385.6],[7.92,376.8],[8.13,369.1],[8.35,362.0],[8.57,355.5],[8.78,349.6],[9.0,343.8],[9.22,337.9],[9.44,332.0],[9.65,326.1],[9.87,319.6],[10.09,313.1],[10.3,304.8],[10.52,294.8],[10.74,284.2],[10.96,275.4],[11.17,265.9],[11.39,258.8],[11.61,251.2],[11.82,244.7],[12.04,238.2],[12.26,231.7],[12.48,225.2],[12.69,218.2],[12.91,212.9],[13.13,207.5],[13.34,193.4],[13.56,189.9],[13.78,185.7],[14.0,181.0],[14.21,176.9],[14.43,172.8],[14.65,169.8],[14.86,166.3],[15.08,163.9],[15.3,160.4],[15.52,158.0],[15.73,155.7],[15.95,153.3],[16.17,150.9],[16.38,149.2],[16.6,147.4],[16.82,145.0],[17.04,143.3],[17.25,141.5],[17.47,140.3],[17.69,138.6],[17.9,136.8],[18.12,135.6],[18.34,134.4],[18.56,132.7],[18.77,131.5],[18.99,130.3],[19.21,129.1],[19.42,127.9],[19.64,126.8],[19.86,126.2],[20.08,125.0],[20.29,123.8],[20.51,122.6],[20.73,121.5],[20.94,120.9],[21.16,119.7],[21.38,119.1],[21.6,117.9],[21.81,117.3],[22.03,116.7],[22.25,115.6],[22.46,115.0],[22.68,114.4],[22.9,113.8],[23.12,113.2],[23.33,112.0],[23.55,110.8],[23.77,110.3],[23.98,110.3],[24.2,109.1],[24.42,108.5],[24.64,107.9],[24.85,107.3],[25.07,106.7],[25.29,106.1],[25.5,105.5],[25.72,105.0],[25.94,105.0],[26.16,103.8],[26.37,103.2],[26.59,102.6],[26.81,102.6],[27.02,102.0],[27.24,101.4],[27.46,100.8],[27.68,100.8],[27.89,100.2],[28.11,99.6],[28.33,99.1],[28.55,98.5],[28.76,97.9],[28.98,97.9],[29.2,97.3],[29.41,97.3],[29.63,96.7],[29.85,96.7],[30.07,96.1],[30.28,95.5],[30.5,95.5],[30.72,94.9],[30.93,94.3],[31.15,94.3],[31.37,93.8],[31.59,93.8],[31.8,93.2],[32.02,92.6],[32.24,92.6],[32.45,92.6],[32.67,92.0],[32.89,92.0],[33.11,91.4],[33.32,91.4],[33.54,90.8],[33.76,90.8],[33.97,90.2],[34.19,89.6],[34.41,89.6],[34.63,89.6],[34.84,89.0],[35.06,89.0],[35.28,89.0],[35.49,89.0],[35.71,88.4],[35.93,88.4],[36.15,87.9],[36.36,87.9],[36.58,87.9],[36.8,87.3],[37.01,87.3],[37.23,87.3],[37.45,86.7],[37.67,86.7],[37.88,86.1],[38.1,86.1],[38.32,86.1],[38.53,85.5],[38.75,85.5],[38.97,85.5],[39.19,84.9],[39.4,84.9],[39.62,84.3],[39.84,84.3],[40.05,84.3],[40.27,84.3],[40.49,84.3],[40.71,84.3],[40.92,83.7],[41.14,83.7],[41.36,83.7],[41.57,83.7],[41.79,83.7],[42.01,83.1],[42.23,83.1],[42.44,83.1],[42.66,82.5],[42.88,82.5],[43.09,82.5],[43.31,82.5],[43.53,82.0],[43.75,82.0],[43.96,82.0],[44.18,82.0],[44.4,81.4],[44.61,81.4],[44.83,81.4],[45.05,81.4],[45.27,81.4],[45.48,81.4],[45.7,80.8],[45.92,80.8],[46.13,80.8],[46.35,80.8],[46.57,80.8],[46.79,80.8],[47.0,80.8],[47.22,80.8],[47.44,80.2],[47.65,80.2],[47.87,80.2],[48.09,80.2],[48.31,79.6],[48.52,79.6],[48.74,79.6],[48.96,79.6],[49.17,79.6],[49.39,79.6],[49.61,79.6],[49.83,79.6],[50.04,79.6],[50.26,79.6],[50.48,79.6],[50.69,79.6],[50.91,79.6],[51.13,79.0],[51.35,79.0],[51.56,79.0],[51.78,79.0],[52.0,79.0],[52.21,79.0],[52.43,79.0],[52.65,79.0],[52.87,79.0],[53.08,78.4],[53.3,78.4],[53.52,78.4],[53.74,78.4],[53.95,78.4],[54.17,77.8],[54.39,77.8],[54.6,77.8],[54.82,77.8],[55.04,77.8],[55.26,77.8],[55.47,77.8],[55.69,77.2],[55.91,77.2],[56.12,77.2],[56.34,77.2],[56.56,77.8],[56.78,77.8],[56.99,77.8]],"2.0":[[1.57,445.8],[1.79,444.0],[2.01,442.8],[2.23,441.0],[2.44,438.7],[2.66,426.9],[2.88,418.0],[3.09,423.9],[3.31,421.0],[3.53,416.9],[3.75,412.1],[3.96,408.6],[4.18,403.9],[4.4,398.6],[4.61,394.5],[4.83,389.2],[5.05,383.8],[5.27,377.9],[5.48,372.6],[5.7,367.3],[5.92,361.4],[6.13,356.7],[6.35,352.0],[6.57,346.1],[6.79,341.4],[7.0,336.7],[7.22,332.0],[7.44,327.8],[7.65,323.1],[7.87,318.4],[8.09,314.9],[8.31,310.7],[8.52,307.8],[8.74,304.8],[8.96,297.8],[9.17,289.5],[9.39,283.0],[9.61,277.1],[9.83,271.2],[10.04,265.3],[10.26,259.4],[10.48,254.1],[10.69,248.2],[10.91,243.5],[11.13,238.8],[11.35,234.7],[11.56,230.0],[11.78,226.4],[12.0,222.3],[12.21,218.2],[12.43,214.0],[12.65,211.1],[12.87,207.0],[13.08,203.4],[13.3,199.3],[13.52,196.9],[13.74,193.4],[13.95,191.0],[14.17,188.1],[14.39,185.1],[14.6,183.4],[14.82,180.4],[15.04,178.7],[15.26,176.9],[15.47,174.5],[15.69,172.2],[15.91,171.0],[16.12,168.6],[16.34,167.5],[16.56,165.1],[16.78,163.3],[16.99,162.7],[17.21,161.0],[17.43,159.8],[17.64,158.6],[17.86,156.8],[18.08,156.2],[18.3,155.1],[18.51,154.5],[18.73,153.3],[18.95,152.1],[19.16,151.5],[19.38,150.4],[19.6,149.2],[19.82,148.6],[20.03,148.0],[20.25,147.4],[20.47,145.6],[20.68,145.6],[20.9,145.0],[21.12,143.9],[21.34,143.3],[21.55,142.7],[21.77,142.7],[21.99,141.5],[22.2,140.9],[22.42,140.3],[22.64,140.3],[22.86,139.7],[23.07,139.2],[23.29,139.2],[23.51,138.6],[23.72,137.4],[23.94,137.4],[24.16,137.4],[24.38,137.4],[24.59,136.2],[24.81,136.2],[25.03,135.6],[25.24,135.6],[25.46,135.0],[25.68,135.0],[25.9,134.4],[26.11,133.8],[26.33,134.4],[26.55,133.8],[26.76,133.3],[26.98,133.8],[27.2,133.3],[27.42,132.7],[27.63,132.1],[27.85,132.7],[28.07,132.1],[28.28,131.5],[28.5,131.5],[28.72,131.5],[28.94,130.9],[29.15,130.9],[29.37,130.9],[29.59,130.9],[29.8,130.9],[30.02,130.3],[30.24,130.3],[30.46,129.7],[30.67,129.7],[30.89,129.1],[31.11,129.7],[31.32,129.1],[31.54,129.1],[31.76,129.1],[31.98,129.1],[32.19,128.5],[32.41,129.1],[32.63,129.1],[32.84,129.1],[33.06,127.9],[33.28,127.9],[33.5,127.9],[33.71,127.4],[33.93,127.4],[34.15,127.4],[34.36,127.4],[34.58,127.4],[34.8,127.4],[35.02,127.4],[35.23,127.4],[35.45,127.4],[35.67,127.4],[35.88,126.8],[36.1,126.8],[36.32,126.8],[36.54,126.8],[36.75,126.8],[36.97,126.8],[37.19,126.8],[37.4,126.8],[37.62,126.8],[37.84,126.8],[38.06,126.2],[38.27,126.2],[38.49,126.2],[38.71,126.2],[38.93,126.2],[39.14,126.2],[39.36,126.2],[39.58,126.2],[39.79,126.2],[40.01,126.2],[40.23,126.2],[40.45,126.2],[40.66,126.2],[40.88,126.2],[41.1,126.2],[41.31,126.2],[41.53,126.2],[41.75,125.6],[41.97,125.6],[42.18,125.6],[42.4,125.6],[42.62,125.6],[42.83,125.6],[43.05,125.6],[43.27,125.6],[43.49,125.0],[43.7,124.4],[43.92,124.4],[44.14,124.4],[44.35,124.4],[44.57,124.4],[44.79,124.4],[45.01,124.4],[45.22,124.4],[45.44,125.0],[45.66,125.0],[45.87,125.0],[46.09,125.0],[46.31,124.4],[46.53,124.4],[46.74,124.4],[46.96,124.4],[47.18,124.4],[47.39,124.4],[47.61,124.4],[47.83,124.4],[48.05,124.4],[48.26,124.4],[48.48,124.4],[48.7,124.4],[48.91,124.4],[49.13,124.4],[49.35,123.8],[49.57,123.8],[49.78,123.8],[50.0,123.8],[50.22,123.8],[50.43,123.8],[50.65,123.8],[50.87,123.8],[51.09,123.8],[51.3,123.8],[51.52,123.8],[51.74,123.8],[51.95,124.4],[52.17,124.4],[52.39,124.4],[52.61,124.4],[52.82,124.4],[53.04,124.4],[53.26,124.4],[53.47,124.4],[53.69,124.4],[53.91,124.4],[54.13,124.4],[54.34,124.4],[54.56,124.4],[54.78,124.4],[54.99,123.8],[55.21,123.8],[55.43,124.4],[55.65,124.4],[55.86,124.4],[56.08,124.4],[56.3,124.4],[56.51,124.4],[56.73,124.4],[56.95,124.4]],"2.5":[[1.44,514.7],[1.66,542.5],[1.88,557.8],[2.1,562.5],[2.31,564.9],[2.53,568.4],[2.75,573.7],[2.96,573.7],[3.18,573.7],[3.4,573.7],[3.62,573.1],[3.83,572.5],[4.05,571.9],[4.27,570.8],[4.48,570.2],[4.7,569.6],[4.92,568.4],[5.14,567.2],[5.35,566.0],[5.57,565.4],[5.79,564.3],[6.0,562.5],[6.22,561.3],[6.44,560.1],[6.66,558.4],[6.87,557.2],[7.09,555.4],[7.31,553.7],[7.52,551.9],[7.74,549.5],[7.96,548.3],[8.18,546.0],[8.39,543.6],[8.61,541.3],[8.83,539.5],[9.04,536.6],[9.26,534.2],[9.48,531.8],[9.7,529.5],[9.91,525.9],[10.13,523.6],[10.35,520.0],[10.56,517.1],[10.78,514.2],[11.0,510.6],[11.22,508.3],[11.43,504.7],[11.65,501.2],[11.87,497.6],[12.08,494.1],[12.3,491.2],[12.52,488.2],[12.74,484.1],[12.95,481.1],[13.17,477.6],[13.39,474.1],[13.6,469.9],[13.82,467.0],[14.04,462.9],[14.26,459.9],[14.47,455.2],[14.69,452.2],[14.91,448.1],[15.12,444.6],[15.34,441.0],[15.56,436.9],[15.78,433.4],[15.99,429.8],[16.21,425.7],[16.43,422.2],[16.64,418.6],[16.86,415.1],[17.08,411.6],[17.3,407.4],[17.51,403.9],[17.73,400.4],[17.95,396.2],[18.17,392.7],[18.38,389.2],[18.6,385.0],[18.82,381.5],[19.03,377.4],[19.25,373.2],[19.47,369.7],[19.69,365.0],[19.9,360.8],[20.12,356.1],[20.34,352.6],[20.55,348.5],[20.77,344.9],[20.99,340.8],[21.21,338.4],[21.42,334.9],[21.64,331.4],[21.86,327.8],[22.07,325.5],[22.29,321.9],[22.51,319.0],[22.73,316.0],[22.94,313.7],[23.16,310.7],[23.38,307.8],[23.59,305.4],[23.81,302.5],[24.03,299.5],[24.25,297.2],[24.46,294.8],[24.68,291.9],[24.9,290.1],[25.11,287.1],[25.33,285.4],[25.55,283.0],[25.77,280.7],[25.98,278.9],[26.2,277.1],[26.42,274.8],[26.63,273.0],[26.85,270.6],[27.07,268.9],[27.29,266.5],[27.5,265.3],[27.72,263.0],[27.94,261.2],[28.15,259.4],[28.37,257.1],[28.59,254.7],[28.81,252.9],[29.02,250.6],[29.24,248.8],[29.46,247.1],[29.67,245.3],[29.89,243.5],[30.11,241.7],[30.33,240.0],[30.54,238.2],[30.76,237.0],[30.98,235.8],[31.19,234.1],[31.41,232.9],[31.63,231.7],[31.85,230.5],[32.06,229.4],[32.28,228.2],[32.5,227.6],[32.71,226.4],[32.93,225.2],[33.15,224.6],[33.37,223.5],[33.58,222.9],[33.8,222.3],[34.02,221.1],[34.23,220.5],[34.45,219.9],[34.67,219.3],[34.89,218.8],[35.1,218.2],[35.32,217.6],[35.54,217.0],[35.75,216.4],[35.97,215.8],[36.19,215.2],[36.41,214.6],[36.62,214.0],[36.84,213.4],[37.06,212.9],[37.27,212.3],[37.49,211.7],[37.71,211.7],[37.93,210.5],[38.14,210.5],[38.36,210.5],[38.58,209.9],[38.79,209.3],[39.01,208.7],[39.23,208.1],[39.45,208.1],[39.66,207.5],[39.88,207.0],[40.1,207.0],[40.31,207.0],[40.53,206.4],[40.75,205.8],[40.97,205.8],[41.18,205.2],[41.4,204.6],[41.62,204.0],[41.83,204.0],[42.05,203.4],[42.27,203.4],[42.49,203.4],[42.7,202.2],[42.92,202.2],[43.14,202.2],[43.36,202.2],[43.57,201.7],[43.79,201.7],[44.01,201.1],[44.22,200.5],[44.44,200.5],[44.66,199.9],[44.88,199.3],[45.09,199.3],[45.31,198.7],[45.53,198.7],[45.74,198.7],[45.96,198.7],[46.18,198.7],[46.4,198.1],[46.61,198.1],[46.83,197.5],[47.05,197.5],[47.26,197.5],[47.48,196.9],[47.7,196.9],[47.92,196.3],[48.13,196.3],[48.35,195.8],[48.57,195.8],[48.78,195.2],[49.0,195.2],[49.22,195.2],[49.44,194.6],[49.65,194.6],[49.87,194.0],[50.09,194.0],[50.3,194.0],[50.52,194.0],[50.74,194.0],[50.96,193.4],[51.17,193.4],[51.39,192.8],[51.61,192.8],[51.82,192.8],[52.04,192.2],[52.26,192.2],[52.48,191.6],[52.69,191.6],[52.91,191.6],[53.13,191.0],[53.34,191.0],[53.56,191.0],[53.78,190.4],[54.0,190.4],[54.21,190.4],[54.43,190.4],[54.65,190.4],[54.86,190.4],[55.08,189.9],[55.3,189.9],[55.52,189.3],[55.73,189.3],[55.95,189.3],[56.17,189.3],[56.38,189.3],[56.6,189.3],[56.82,188.7],[57.04,188.7]]},"solenoid":[[0.2,0.1484,0.135,0.167],[0.3,0.2162,0.214,0.217],[0.4,0.288,0.285,0.291],[0.5,0.3612,0.345,0.37],[0.6,0.434,0.425,0.44],[0.7,0.5106,0.507,0.513],[0.8,0.5814,0.573,0.587],[0.9,0.6534,0.639,0.662],[1.0,0.7216,0.703,0.746],[1.1,0.7928,0.765,0.806],[1.2,0.8676,0.857,0.877],[1.3,0.9316,0.923,0.945],[1.4,1.016,0.996,1.039],[1.5,1.079,1.047,1.112],[1.6,1.1366,1.069,1.172],[1.7,1.2388,1.215,1.269],[1.9,1.3932,1.382,1.402],[2.0,1.4884,1.47,1.503],[2.1,1.5528,1.527,1.587],[2.2,1.6122,1.585,1.629]],"opt":{"eq":{"rule":[["2024-01-05",1.0],["2024-01-12",1.0],["2024-01-19",1.0],["2024-01-26",1.0],["2024-02-02",1.0],["2024-02-09",1.0],["2024-02-16",1.0],["2024-02-23",1.0],["2024-03-01",1.0],["2024-03-08",1.102],["2024-03-15",1.102],["2024-03-22",1.102],["2024-03-29",1.102],["2024-04-05",1.102],["2024-04-12",1.102],["2024-04-19",1.102],["2024-04-26",1.091],["2024-05-03",0.999],["2024-05-10",1.115],["2024-05-17",1.115],["2024-05-24",1.094],["2024-05-31",1.075],["2024-06-07",1.083],["2024-06-14",0.94],["2024-06-21",0.94],["2024-06-28",0.921],["2024-07-05",0.921],["2024-07-12",0.921],["2024-07-19",0.921],["2024-07-26",0.921],["2024-08-02",0.921],["2024-08-09",0.915],["2024-08-16",0.915],["2024-08-23",0.915],["2024-08-30",0.869],["2024-09-06",0.869],["2024-09-13",0.825],["2024-09-20",0.825],["2024-09-27",0.788],["2024-10-04",0.788],["2024-10-11",0.788],["2024-10-18",0.788],["2024-10-25",0.788],["2024-11-01",0.788],["2024-11-08",1.295],["2024-11-15",1.295],["2024-11-22",1.295],["2024-11-29",1.555],["2024-12-06",1.643],["2024-12-13",1.249],["2024-12-20",1.249],["2024-12-27",1.249],["2025-01-03",1.249],["2025-01-10",1.249],["2025-01-17",1.249],["2025-01-24",1.235],["2025-01-31",1.508],["2025-02-07",1.51],["2025-02-14",1.833],["2025-02-21",1.833],["2025-02-28",2.53],["2025-03-07",2.422],["2025-03-14",2.222],["2025-03-21",2.222],["2025-03-28",2.222],["2025-04-04",2.222],["2025-04-11",2.222],["2025-04-18",2.222],["2025-04-25",2.222],["2025-05-02",2.222],["2025-05-09",2.223],["2025-05-16",2.223],["2025-05-23",2.223],["2025-05-30",2.021],["2025-06-06",2.021],["2025-06-13",2.021],["2025-06-20",2.021],["2025-06-27",2.025],["2025-07-04",2.025],["2025-07-11",2.025],["2025-07-18",2.025],["2025-07-25",2.025],["2025-08-01",2.025],["2025-08-08",2.002],["2025-08-15",2.002],["2025-08-22",2.002],["2025-08-29",1.981],["2025-09-05",1.981],["2025-09-12",2.174],["2025-09-19",2.174],["2025-09-26",2.295],["2025-10-03",2.295],["2025-10-10",2.295],["2025-10-17",2.295],["2025-10-24",2.382],["2025-10-31",3.001],["2025-11-07",2.595],["2025-11-14",2.595],["2025-11-21",2.595],["2025-11-28",2.444],["2025-12-05",2.444],["2025-12-12",2.705],["2025-12-19",2.705],["2025-12-26",2.705],["2026-01-02",2.705],["2026-01-09",2.705],["2026-01-16",2.705],["2026-01-23",2.705],["2026-01-30",3.372],["2026-02-06",2.846],["2026-02-13",5.754],["2026-02-20",5.754],["2026-02-27",6.723],["2026-03-06",6.723],["2026-03-13",7.056],["2026-03-20",7.056],["2026-03-27",7.056],["2026-04-03",7.056],["2026-04-10",7.056],["2026-04-17",7.056],["2026-04-24",6.778],["2026-05-01",6.778]],"all":[["2024-01-05",1.0],["2024-01-12",0.861],["2024-01-19",0.861],["2024-01-26",0.861],["2024-02-02",0.861],["2024-02-09",0.861],["2024-02-16",0.861],["2024-02-23",0.861],["2024-03-01",0.861],["2024-03-08",0.824],["2024-03-15",0.824],["2024-03-22",0.824],["2024-03-29",0.824],["2024-04-05",0.824],["2024-04-12",0.764],["2024-04-19",0.764],["2024-04-26",0.79],["2024-05-03",0.627],["2024-05-10",0.7],["2024-05-17",0.7],["2024-05-24",0.617],["2024-05-31",0.667],["2024-06-07",0.671],["2024-06-14",0.583],["2024-06-21",0.583],["2024-06-28",0.571],["2024-07-05",0.571],["2024-07-12",0.549],["2024-07-19",0.549],["2024-07-26",0.549],["2024-08-02",0.549],["2024-08-09",0.588],["2024-08-16",0.588],["2024-08-23",0.588],["2024-08-30",0.558],["2024-09-06",0.492],["2024-09-13",0.467],["2024-09-20",0.467],["2024-09-27",0.446],["2024-10-04",0.406],["2024-10-11",0.398],["2024-10-18",0.398],["2024-10-25",0.398],["2024-11-01",0.398],["2024-11-08",0.603],["2024-11-15",0.603],["2024-11-22",0.603],["2024-11-29",0.724],["2024-12-06",0.704],["2024-12-13",0.569],["2024-12-20",0.569],["2024-12-27",0.569],["2025-01-03",0.569],["2025-01-10",0.569],["2025-01-17",0.569],["2025-01-24",0.539],["2025-01-31",0.583],["2025-02-07",0.536],["2025-02-14",0.656],["2025-02-21",0.656],["2025-02-28",0.919],["2025-03-07",0.892],["2025-03-14",0.818],["2025-03-21",0.818],["2025-03-28",0.818],["2025-04-04",0.818],["2025-04-11",0.872],["2025-04-18",0.872],["2025-04-25",0.872],["2025-05-02",0.872],["2025-05-09",0.995],["2025-05-16",0.995],["2025-05-23",0.995],["2025-05-30",0.943],["2025-06-06",0.943],["2025-06-13",0.943],["2025-06-20",0.943],["2025-06-27",0.945],["2025-07-04",0.945],["2025-07-11",0.945],["2025-07-18",0.945],["2025-07-25",0.945],["2025-08-01",0.945],["2025-08-08",0.964],["2025-08-15",0.964],["2025-08-22",0.964],["2025-08-29",0.998],["2025-09-05",1.007],["2025-09-12",1.105],["2025-09-19",1.105],["2025-09-26",1.167],["2025-10-03",1.176],["2025-10-10",1.176],["2025-10-17",1.176],["2025-10-24",1.235],["2025-10-31",1.532],["2025-11-07",1.412],["2025-11-14",1.412],["2025-11-21",1.412],["2025-11-28",1.26],["2025-12-05",1.187],["2025-12-12",1.393],["2025-12-19",1.393],["2025-12-26",1.393],["2026-01-02",1.393],["2026-01-09",1.393],["2026-01-16",1.393],["2026-01-23",1.393],["2026-01-30",1.662],["2026-02-06",1.376],["2026-02-13",2.916],["2026-02-20",2.916],["2026-02-27",3.407],["2026-03-06",3.451],["2026-03-13",3.622],["2026-03-20",3.622],["2026-03-27",3.622],["2026-04-03",3.622],["2026-04-10",3.622],["2026-04-17",3.622],["2026-04-24",3.354],["2026-05-01",3.479]]},"hist":{"edges":[-50,-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,330,340],"counts":[7,31,180,430,901,1340,1738,2062,2073,1970,1824,1564,1334,1103,860,642,527,393,319,199,146,113,84,39,33,29,19,11,9,6,6,2,1,1,0,1,1,2,0],"rule":213.6,"median":46.3,"pct":99.8,"n":20000},"quint":[["Q1",163,-10.8,42.3],["Q2",163,-5.1,40.5],["Q3",163,-3.5,48.5],["Q4",163,5.4,50.3],["Q5",163,16.0,53.4]],"year":[["2024","rule",48,9.1],["2025","rule",53,18.8],["2026","rule",20,56.7],["2024","all",98,-3.5],["2025","all",143,8.6],["2026","all",43,26.6]]},"slac":{"dens":[[1.188,1.175,0.008],[1.157,1.141,0.009],[1.116,1.122,0.017],[1.151,1.172,0.02],[1.292,1.326,0.024],[1.302,1.3,0.021],[1.121,1.139,0.009],[1.077,1.086,0.005],[1.097,1.095,0.007],[1.16,1.157,0.012],[1.093,1.072,0.004],[1.078,1.116,0.011],[1.183,1.166,0.007],[1.132,1.149,0.006],[1.217,1.289,0.025],[1.144,1.14,0.021],[1.043,1.057,0.011],[1.131,1.174,0.004],[1.149,1.145,0.003],[1.153,1.15,0.004],[1.09,1.128,0.009],[1.184,1.175,0.007],[1.077,1.09,0.009],[1.132,1.136,0.006],[1.06,1.058,0.017],[1.299,1.25,0.029],[1.127,1.115,0.015],[1.154,1.155,0.001],[1.077,1.081,0.013],[1.193,1.117,0.005],[1.192,1.181,0.003],[1.317,1.327,0.014],[1.2,1.153,0.004],[1.145,1.166,0.008],[1.29,1.273,0.018],[1.166,1.163,0.005],[1.295,1.31,0.021],[1.057,1.065,0.007],[1.123,1.111,0.013],[1.183,1.129,0.006],[1.322,1.246,0.05],[1.103,1.128,0.007],[1.083,1.091,0.007],[1.258,1.257,0.011],[1.165,1.196,0.003],[1.033,1.1,0.016],[1.21,1.205,0.018],[1.08,1.116,0.005],[1.163,1.129,0.006],[1.158,1.152,0.009],[1.153,1.152,0.011],[1.139,1.127,0.004],[1.112,1.145,0.014],[1.11,1.126,0.015],[1.173,1.152,0.004],[1.13,1.139,0.01],[1.093,1.077,0.017],[1.158,1.159,0.016],[1.067,1.139,0.02],[1.103,1.077,0.011],[1.083,1.093,0.003],[1.28,1.27,0.013],[1.067,1.101,0.012],[1.11,1.104,0.013],[1.058,1.078,0.004],[1.103,1.124,0.007],[1.127,1.122,0.011],[1.077,1.08,0.008],[1.077,1.087,0.005],[1.287,1.281,0.032],[1.038,1.083,0.015],[1.047,1.06,0.008],[1.1,1.123,0.01],[1.1,1.092,0.006],[1.09,1.098,0.003],[1.182,1.148,0.004],[1.1,1.094,0.01],[1.311,1.24,0.017],[1.096,1.129,0.023],[1.095,1.067,0.044],[1.171,1.131,0.006],[1.107,1.079,0.005],[1.048,1.05,0.006],[1.33,1.239,0.023],[1.296,1.278,0.023],[1.143,1.141,0.006],[1.115,1.087,0.008],[1.177,1.163,0.012],[1.308,1.325,0.018],[1.083,1.088,0.004],[1.137,1.111,0.007],[1.104,1.101,0.09],[1.147,1.129,0.005],[1.166,1.168,0.005],[1.098,1.147,0.007],[1.287,1.275,0.019],[1.053,1.009,0.019],[1.189,1.175,0.006],[1.091,1.139,0.03],[1.058,1.141,0.01],[1.13,1.1,0.009],[1.06,1.073,0.003]],"cond":[["ethers",19.2,31.3],["amides",28.8,25.0],["other polar",35.4,19.7],["alcohols & glycols",37.1,34.3],["alcohols & glycols",8.8,14.4],["alcohols & glycols",14.1,20.5],["nitriles",15.3,21.4],["ethers",42.9,26.9],["other polar",24.9,19.5],["nitriles",8.9,24.4],["nitriles",30.9,29.1],["nitriles",12.4,17.1],["alcohols & glycols",17.9,18.3],["ethers",47.8,22.3],["amides",12.1,20.5],["binary mixtures",23.9,26.1],["amides",16.8,19.1],["sulfur-containing",22.0,21.6],["ethers",11.0,14.2],["alcohols & glycols",24.4,24.5],["binary mixtures",25.0,27.7],["amides",11.4,12.6],["binary mixtures",37.8,34.4],["amides",19.2,26.7],["alcohols & glycols",11.8,11.6],["binary mixtures",18.3,25.2],["alcohols & glycols",10.7,10.3],["ethers",25.9,24.7],["nitriles",13.1,14.6],["other polar",26.8,20.1],["alcohols & glycols",27.5,24.7],["alcohols & glycols",16.7,17.4],["sulfur-containing",15.4,18.5],["ethers",42.6,34.6],["sulfur-containing",34.1,28.5],["other polar",39.5,26.3],["alcohols & glycols",18.4,17.8],["ethers",15.0,29.8],["ethers",31.1,21.1],["other polar",39.0,30.8],["nitriles",20.6,23.0],["sulfur-containing",17.8,17.1],["ethers",22.7,22.8],["alcohols & glycols",22.4,17.3],["ethers",11.1,15.3],["alcohols & glycols",5.5,14.6],["alcohols & glycols",25.0,23.1],["amides",7.2,23.4],["ethers",34.1,27.9],["sulfur-containing",23.5,20.9],["sulfur-containing",37.8,35.7],["alcohols & glycols",34.2,29.0],["ethers",21.9,14.4],["amides",19.9,22.2],["ethers",32.2,24.8],["amides",21.3,29.4],["amides",13.8,19.3],["alcohols & glycols",11.1,16.6],["ethers",19.1,17.8],["alcohols & glycols",20.2,21.7],["sulfur-containing",31.8,27.7],["binary mixtures",19.1,23.8],["amides",20.5,22.2],["amides",36.0,37.1],["ethers",19.1,18.3],["sulfur-containing",13.5,13.3],["alcohols & glycols",21.1,26.2],["amides",30.5,25.6],["nitriles",12.4,13.3],["amides",8.2,13.9],["ethers",39.6,17.8],["other polar",25.6,19.8],["other polar",24.5,18.1],["alcohols & glycols",16.6,18.0],["ethers",20.9,18.8],["other polar",22.6,22.8],["alcohols & glycols",8.4,15.7],["ethers",10.5,12.9],["sulfur-containing",25.0,23.9],["ethers",22.7,17.6],["sulfur-containing",33.1,31.9],["alcohols & glycols",24.4,24.8],["ethers",18.4,18.0],["alcohols & glycols",13.1,10.1],["binary mixtures",25.8,33.9],["ethers",15.8,20.6],["alcohols & glycols",5.8,13.2],["amides",12.1,13.9],["amides",33.3,36.8],["alcohols & glycols",39.9,29.9],["sulfur-containing",8.6,9.7],["ethers",40.0,35.3],["sulfur-containing",23.9,22.4],["alcohols & glycols",9.5,12.4],["alcohols & glycols",29.2,27.8],["alcohols & glycols",9.3,14.2],["sulfur-containing",12.5,12.2],["alcohols & glycols",30.4,27.5],["binary mixtures",18.5,17.2],["sulfur-containing",10.2,13.9],["sulfur-containing",20.0,19.5]],"ce":[["ethers",96.69,96.51],["amides",96.81,96.34],["binary mixtures",97.12,96.49],["ethers",96.1,95.93],["alcohols & glycols",97.31,96.59],["alcohols & glycols",94.98,96.49],["binary mixtures",93.07,96.59],["amides",97.22,96.82],["ethers",96.81,96.85],["alcohols & glycols",97.23,96.58],["sulfur-containing",96.97,96.02],["alcohols & glycols",97.09,96.76],["alcohols & glycols",96.28,96.58],["sulfur-containing",94.99,96.62],["amides",97.28,96.4],["sulfur-containing",92.53,97.07],["ethers",97.32,96.45],["other",96.73,96.77],["nitriles",94.62,96.56],["amides",97.08,96.35],["alcohols & glycols",96.01,96.68],["ethers",96.61,96.58],["alcohols & glycols",96.14,96.66],["amides",97.08,96.49],["binary mixtures",95.84,96.55],["ethers",96.65,96.74],["ethers",96.58,96.67],["amides",97.53,96.63],["binary mixtures",95.98,96.75],["other polar",97.62,96.81],["sulfur-containing",96.81,96.09],["ethers",96.56,96.63],["ethers",96.33,96.7],["nitriles",96.65,96.8],["sulfur-containing",98.1,96.82],["alcohols & glycols",97.08,96.72],["other polar",97.37,96.81],["other",96.38,96.81],["ethers",96.58,96.63],["other polar",97.29,96.6],["sulfur-containing",97.27,96.81],["sulfur-containing",93.11,97.08],["sulfur-containing",94.77,97.0],["sulfur-containing",95.77,96.77],["alcohols & glycols",96.43,96.56],["alcohols & glycols",96.34,96.49],["alcohols & glycols",96.62,96.56],["other polar",97.68,96.8],["amides",97.36,96.37],["ethers",97.11,96.36],["ethers",97.08,96.64],["binary mixtures",96.7,96.62],["ethers",97.41,96.81],["amides",97.81,96.74],["binary mixtures",94.82,96.6],["ethers",97.65,96.77],["other polar",94.83,96.8],["sulfur-containing",98.16,96.9],["amides",97.68,96.78],["alcohols & glycols",96.76,96.29],["other polar",97.65,96.58],["amides",97.41,96.38],["ethers",96.92,96.72],["binary mixtures",96.92,96.49],["other polar",97.81,96.95],["alcohols & glycols",96.34,96.49],["ethers",97.67,96.61],["sulfur-containing",97.5,96.68],["alcohols & glycols",97.57,96.42],["alcohols & glycols",96.16,96.65],["nitriles",97.47,96.78],["alcohols & glycols",97.68,96.6],["alcohols & glycols",96.08,96.57],["ethers",96.58,96.69],["alcohols & glycols",96.83,96.72],["ethers",97.27,96.78],["ethers",96.55,96.98],["amides",96.87,96.67],["other",97.29,96.84],["alcohols & glycols",96.44,96.79],["ethers",97.02,96.91],["ethers",95.44,96.54],["other polar",96.6,96.77]],"lcCond":[[0.2,0.0678,-0.1333,0.269],[0.2258,0.0982,-0.0814,0.2778],[0.2516,0.1345,-0.0395,0.3085],[0.2774,0.1596,-0.0172,0.3365],[0.3032,0.1887,0.0185,0.3588],[0.329,0.2167,0.0603,0.3732],[0.3548,0.2669,0.118,0.4159],[0.3806,0.2886,0.1514,0.4258],[0.4065,0.3029,0.1671,0.4387],[0.4323,0.3005,0.1481,0.4529],[0.4581,0.316,0.1766,0.4553],[0.4839,0.3245,0.1833,0.4657],[0.5097,0.3631,0.2377,0.4885],[0.5355,0.3652,0.2396,0.4907],[0.5613,0.358,0.2365,0.4795],[0.5871,0.3788,0.2526,0.5051],[0.6129,0.3909,0.2695,0.5123],[0.6387,0.4031,0.2884,0.5179],[0.6645,0.4169,0.3101,0.5236],[0.6903,0.4194,0.3098,0.529],[0.7161,0.4409,0.333,0.5487],[0.7419,0.4549,0.3464,0.5634],[0.7677,0.4616,0.3549,0.5683],[0.7935,0.4808,0.3794,0.5822],[0.8194,0.4689,0.3726,0.5651],[0.8452,0.4675,0.3631,0.5719],[0.871,0.4717,0.374,0.5694],[0.8968,0.4689,0.382,0.5557],[0.9226,0.4831,0.3939,0.5722],[0.9484,0.4878,0.4081,0.5676],[0.9742,0.5058,0.4442,0.5674],[1.0,0.5392,0.4896,0.5888]],"lcCe":[[0.2,-0.4947,-1.0797,0.0904],[0.2258,-0.3658,-0.7787,0.0471],[0.2516,-0.308,-0.681,0.0649],[0.2774,-0.2554,-0.5732,0.0623],[0.3032,-0.2125,-0.5099,0.085],[0.329,-0.2109,-0.5184,0.0966],[0.3548,-0.1954,-0.4942,0.1033],[0.3806,-0.1807,-0.4727,0.1114],[0.4065,-0.1519,-0.4139,0.11],[0.4323,-0.1394,-0.4003,0.1216],[0.4581,-0.1219,-0.3633,0.1195],[0.4839,-0.1068,-0.3434,0.1298],[0.5097,-0.0972,-0.3257,0.1313],[0.5355,-0.0916,-0.3143,0.1311],[0.5613,-0.0774,-0.2981,0.1433],[0.5871,-0.0802,-0.3094,0.1491],[0.6129,-0.0751,-0.3089,0.1587],[0.6387,-0.0576,-0.2781,0.1629],[0.6645,-0.0526,-0.2737,0.1685],[0.6903,-0.0506,-0.2695,0.1682],[0.7161,-0.0394,-0.2538,0.1749],[0.7419,-0.0377,-0.255,0.1795],[0.7677,-0.0303,-0.2451,0.1844],[0.7935,-0.031,-0.2517,0.1896],[0.8194,-0.0236,-0.2423,0.1952],[0.8452,-0.0164,-0.2368,0.204],[0.871,-0.017,-0.2379,0.2039],[0.8968,-0.0122,-0.2347,0.2103],[0.9226,-0.0103,-0.2343,0.2137],[0.9484,-0.0075,-0.2286,0.2136],[0.9742,-0.005,-0.2266,0.2167],[1.0,0.0004,-0.219,0.2199]],"r2":{"dens":0.84,"cond":0.54,"ce":-0.09}}};
+const C={ink:"#1c1c1c",mut:"rgba(28,28,28,.56)",ax:"rgba(28,28,28,.32)",grid:"rgba(28,28,28,.08)",blue:"#2c5aa0",rust:"#b4532a",
+  curves:{c1:"#2c5aa0",c2:"#b4532a",c3:"#3d7a5c",c4:"#c08a22",c5:"#7d5a94"}};
+const F='font-family="Source Sans 3, Helvetica, Arial, sans-serif"';
+const REDUCE=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const lin=(d0,d1,r0,r1)=>v=>r0+(v-d0)/(d1-d0)*(r1-r0);
+const txt=(x,y,s,o={})=>`<text x="${(+x).toFixed(1)}" y="${(+y).toFixed(1)}" font-size="${o.size||11.5}" fill="${o.fill||C.mut}" text-anchor="${o.anchor||"start"}" ${o.weight?`font-weight="${o.weight}"`:""}>${s}</text>`;
+const path=pts=>"M"+pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join("L");
+const wrap=(w,h,inner,label)=>`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" ${F} role="img" aria-label="${label}">${inner}<g class="hov"></g></svg>`;
+const hline=(x1,x2,y,col,dash)=>`<line x1="${x1}" x2="${x2}" y1="${y}" y2="${y}" stroke="${col}" ${dash?'stroke-dasharray="3 3"':""}/>`;
+const vline=(x,y1,y2,col,dash)=>`<line x1="${x}" x2="${x}" y1="${y1}" y2="${y2}" stroke="${col}" ${dash?'stroke-dasharray="3 3"':""}/>`;
+const hit=(m,w,h)=>`<rect class="hit" x="${m.l}" y="0" width="${Math.max(0,w-m.l-m.r)}" height="${h}" fill="transparent"/>`;
+const smallH=w=>Math.round(Math.max(210,Math.min(270,w*.72)));
+const f2=v=>(+v).toFixed(2),f3=v=>(+v).toFixed(3);
+function interp(arr,x,ix=0,iy=1){if(x<=arr[0][ix])return arr[0][iy];if(x>=arr.at(-1)[ix])return arr.at(-1)[iy];let lo=0,hi=arr.length-1;while(hi-lo>1){const mid=(lo+hi)>>1;arr[mid][ix]<x?lo=mid:hi=mid}const a=arr[lo],b=arr[hi],t=(x-a[ix])/(b[ix]-a[ix]);return a[iy]+t*(b[iy]-a[iy])}
 
-        window.addEventListener('resize', scroller.resize);
-    </script>
+/* ---------- hover readout ---------- */
+const tip=document.getElementById("tip");
+function showTip(html,cx,cy){tip.innerHTML=html;tip.classList.add("on");const r=tip.getBoundingClientRect();let x=cx+14,y=cy-r.height-12;if(x+r.width>innerWidth-8)x=cx-r.width-14;if(y<8)y=cy+18;tip.style.left=x+"px";tip.style.top=y+"px"}
+function hideTip(){tip.classList.remove("on")}
+function hover(el,fn,leave){const svg=el.querySelector("svg"),layer=svg.querySelector(".hov"),tgt=svg.querySelector(".hit")||svg;
+  const mv=e=>{const r=svg.getBoundingClientRect(),res=fn(e.clientX-r.left,e.clientY-r.top,layer,svg);if(res)showTip(res,e.clientX,e.clientY);else{hideTip();layer.innerHTML=""}};
+  const out=()=>{hideTip();layer.innerHTML="";leave&&leave(svg)};
+  tgt.addEventListener("pointermove",mv);tgt.addEventListener("pointerdown",mv);tgt.addEventListener("pointerleave",out)}
+const dim=(svg,sel,keep)=>svg.querySelectorAll(sel).forEach(n=>n.classList.toggle("hl-dim",keep!=null&&n.dataset.k!==keep));
+
+/* ---------- SAXS: log-log, q in nm⁻¹ ---------- */
+const NAMES={c1:"amide cosolvent",c2:"nitrile cosolvent",c3:"sulfur-containing cosolvent",c4:"glycol cosolvent",c5:"ether cosolvent"};
+const SHORT={c1:"amide",c2:"nitrile",c3:"sulfur-containing",c4:"glycol",c5:"ether"};
+const SAXS={};for(const k in DATA.saxs)SAXS[k]=DATA.saxs[k].map(([q,I])=>[q*10,I]);
+function saxs(el){
+  const w=el.clientWidth,small=w<520,h=small?smallH(w):Math.round(Math.max(260,Math.min(440,w*.55))),m={l:18,r:small?8:112,t:small?14:46,b:34};
+  const lx=lin(Math.log10(.52),Math.log10(34),m.l,w-m.r),ly=lin(Math.log10(380),Math.log10(11000),h-m.b,m.t);
+  const X=v=>lx(Math.log10(v)),Y=v=>ly(Math.log10(v)),Xi=px=>10**((px-m.l)/(w-m.r-m.l)*(Math.log10(34)-Math.log10(.52))+Math.log10(.52));
+  let g="";
+  [1000,10000].forEach(v=>g+=hline(m.l,w-m.r,Y(v),C.grid));
+  [.6,.7,.8,.9,2,3,4,5,6,7,8,9,20,30].forEach(v=>g+=vline(X(v),h-m.b,h-m.b+3,C.ax));
+  [1,10].forEach(v=>g+=vline(X(v),h-m.b,h-m.b+6,C.ax)+txt(X(v),h-m.b+18,v,{anchor:"middle"}));
+  g+=hline(m.l,w-m.r,h-m.b,C.ax)+vline(m.l,m.t,h-m.b,C.ax);
+  g+=txt(w-m.r,h-4,"q (nm⁻¹)",{anchor:"end"})+`<text transform="translate(${m.l-6} ${h-m.b}) rotate(-90)" font-size="10.5" fill="${C.mut}">${small?"intensity, log":"intensity (a.u., log)"}</text>`;
+  if(!small)g+=txt(m.l,13,"Scattered intensity of five electrolytes, SAXS + WAXS",{fill:C.ink,weight:600,size:12.5});
+  if(!small)[[10,"10 nm"],[1,"1 nm"],[.3,"0.3 nm"]].forEach(([d,l])=>{const x=X(2*Math.PI/d);g+=vline(x,m.t-2,m.t+3,C.ax)+txt(x,m.t-6,l,{anchor:"middle",size:10.5})});
+  if(!small)g+=txt(w-m.r,m.t-22,"real space, d = 2π/q",{anchor:"end",size:10.5});
+  const ends=[];
+  for(const k in SAXS){const pts=SAXS[k].map(([q,I])=>[X(q),Y(I)]);g+=`<path class="ln cv" data-k="${k}" d="${path(pts)}" fill="none" stroke="${C.curves[k]}" stroke-width="1.8" stroke-linejoin="round"/>`;ends.push({k,y:pts.at(-1)[1]})}
+  if(m.r>40){ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<14)ends[i].y=ends[i-1].y+14;ends.forEach(e=>g+=`<g class="cv" data-k="${e.k}">${txt(w-m.r+8,e.y+4,SHORT[e.k],{fill:C.curves[e.k]})}</g>`)}
+  
+  g+=hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,"SAXS and WAXS intensity versus q, log-log, five electrolytes");
+  hover(el,(px,py,layer,svg)=>{if(px<m.l||px>w-m.r)return null;const q=Xi(px);let best=null,bd=1e9,dots="";
+    for(const k in SAXS){const I=interp(SAXS[k],q),y=Y(I),d=Math.abs(y-py);dots+=`<circle cx="${px}" cy="${y.toFixed(1)}" r="3" fill="${C.curves[k]}"/>`;if(d<bd){bd=d;best=k}}
+    layer.innerHTML=vline(px,m.t,h-m.b,C.ax,true)+dots;dim(svg,".cv",best);
+    return `<b>q = ${q<10?f2(q):q.toFixed(1)} nm⁻¹</b> <span class="k">·</span> d = ${(2*Math.PI/q).toFixed(2)} nm<br><span style="color:${C.curves[best]};filter:brightness(1.6)">${NAMES[best]}</span>`},
+  svg=>dim(svg,".cv",null));
+}
+
+/* ---------- parity plots (measured vs predicted), from the SLAC exports ---------- */
+const PAR={
+  dens:{pts:()=>DATA.slac.dens.map(([a,b,sd])=>({x:a,y:b,sd})),lo:1,hi:1.35,ticks:[1,1.1,1.2,1.3],fmt:v=>v.toFixed(1),unit:"g/mL",r2:"0.80",n:"102 electrolytes",col:C.blue,
+    title:"Predicting a liquid's density from its X-ray scattering curve",label:"Predicted vs. measured density, R² 0.80",dig:3},
+  cond:{pts:()=>DATA.slac.cond.map(([c,a,b])=>({x:a,y:b,c})),lo:0,hi:50,ticks:[0,10,20,30,40,50],fmt:v=>v,unit:"mS/cm",r2:"0.54",n:"101 · families held out",col:C.blue,label:"Predicted vs. measured conductivity, whole cosolvent families held out, R² 0.54",dig:1},
+  ce:{pts:()=>DATA.slac.ce.map(([c,a,b])=>({x:a,y:b,c})),lo:92,hi:98.6,ticks:[92,94,96,98],fmt:v=>v,unit:"%",r2:"≈ 0",n:"83 · families held out",col:C.rust,label:"Predicted vs. measured Coulombic efficiency: predictions stay flat near the mean, R² about 0",dig:2}
+};
+function parity(el,key){
+  const P=PAR[key],pts=P.pts(),big=!!el.closest(".fig-l")&&el.clientWidth>420,w=el.clientWidth,h=big?Math.round(Math.max(300,Math.min(470,w*.6))):smallH(w);
+  const m=big?{l:40,r:12,t:40,b:34}:{l:34,r:8,t:8,b:30},X=lin(P.lo,P.hi,m.l,w-m.r),Y=lin(P.lo,P.hi,h-m.b,m.t);
+  let g="";
+  P.ticks.forEach(v=>g+=hline(m.l,w-m.r,Y(v),C.grid)+vline(X(v),m.t,h-m.b,C.grid)+txt(m.l-5,Y(v)+4,P.fmt(v),{anchor:"end",size:10.5})+txt(X(v),h-m.b+15,P.fmt(v),{anchor:"middle",size:10.5}));
+  g+=`<line class="ln" x1="${X(P.lo)}" y1="${Y(P.lo)}" x2="${X(P.hi)}" y2="${Y(P.hi)}" stroke="${C.ink}" stroke-opacity=".45"/>`;
+  const r=big?4:3.1;
+  pts.forEach((p,i)=>{let e="";if(p.sd)e=`<line x1="${X(p.x).toFixed(1)}" x2="${X(p.x).toFixed(1)}" y1="${Y(p.y-p.sd).toFixed(1)}" y2="${Y(p.y+p.sd).toFixed(1)}" stroke="${P.col}" stroke-opacity=".28"/>`;
+    g+=`<g class="pt" style="transition-delay:${i*5}ms">${e}<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="${r}" fill="${P.col}" fill-opacity=".78"/></g>`});
+  if(big&&P.title){g+=txt(m.l,13,P.title,{fill:C.ink,weight:600,size:12.5});const a=Math.atan2(Y(P.hi)-Y(P.lo),X(P.hi)-X(P.lo))*180/Math.PI,k=P.lo+(P.hi-P.lo)*.73;
+    g+=`<text transform="translate(${X(k)} ${Y(k)-7}) rotate(${a.toFixed(1)})" font-size="10.5" fill="${C.mut}">perfect prediction</text>`}
+  g+=txt(m.l+8,m.t+(big?18:14),"R² "+(P.r2.startsWith("≈")?"":"= ")+P.r2,{fill:C.ink,weight:600,size:big?15:11.5})+txt(m.l+8,m.t+(big?34:28),"n = "+P.n,{size:10.5});
+  g+=txt(w-m.r,h-2,"measured, "+P.unit,{anchor:"end",size:10.5})+`<text transform="translate(${big?12:9} ${m.t+2}) rotate(90)" font-size="10.5" fill="${C.mut}">predicted</text>`;
+  g+=hit({l:m.l,r:m.r},w,h);
+  el.innerHTML=wrap(w,h,g,P.label);
+  hover(el,(px,py,layer)=>{let b=null,bd=196;pts.forEach(p=>{const d=(X(p.x)-px)**2+(Y(p.y)-py)**2;if(d<bd){bd=d;b=p}});if(!b){layer.innerHTML="";return null}
+    layer.innerHTML=`<circle cx="${X(b.x)}" cy="${Y(b.y)}" r="${r+3}" fill="none" stroke="${C.ink}"/>`+vline(X(b.x),Y(b.y),Y(b.x),C.ink,true);
+    const d=P.dig;return (b.c?`<span class="k">family</span> <b>${b.c}</b><br>`:"")+`measured <b>${b.x.toFixed(d)}</b> ${P.unit}<br>predicted <b>${b.y.toFixed(d)}</b>${b.sd?` ± ${b.sd.toFixed(d)}`:""} <span class="k">(${b.y>=b.x?"+":""}${((b.y-b.x)/b.x*100).toFixed(1)}%)</span>`});
+}
+const density=el=>parity(el,"dens"),condPar=el=>parity(el,"cond"),cePar=el=>parity(el,"ce");
+
+/* ---------- R² by target ---------- */
+const PIPE=["PLS → Ridge","Elastic-net features → Ridge","Random-forest features → Ridge","Elastic-net features → XGBoost"];
+function r2(el){
+  const rows=[["Density",[.81,.80,.82,.80],C.blue],["Conductivity",[-.30,.23,.47,.41],C.blue],["Coulombic eff.",[-.14,-.10,-.11,-.11],C.rust]];
+  const w=el.clientWidth,h=smallH(w),m={l:86,r:36,t:14,b:30},rh=(h-m.t-m.b)/rows.length,X=lin(-.4,1,m.l,w-m.r);
+  let g="";const dots=[];
+  [-.4,0,.5,1].forEach(v=>g+=vline(X(v),m.t,h-m.b,v===0?C.ax:C.grid,v===0)+txt(X(v),h-m.b+15,v,{anchor:"middle",size:10.5}));
+  rows.forEach(([name,vals,col],i)=>{const y=m.t+rh*i+rh/2,best=Math.max(...vals);
+    g+=txt(0,y+4,name,{fill:C.ink});
+    g+=`<line class="ln" x1="${X(Math.min(...vals))}" x2="${X(best)}" y1="${y}" y2="${y}" stroke="${col}" stroke-opacity=".25" stroke-width="2"/>`;
+    vals.forEach((v,j)=>{dots.push([X(v),y,name,j,v,col]);g+=`<circle class="pt" cx="${X(v)}" cy="${y}" r="${v===best?5:3.6}" fill="${v===best?col:"#f5f1e9"}" stroke="${col}" stroke-width="1.4"/>`});
+    g+=txt(X(best)+9,y+4,best.toFixed(2),{fill:col,weight:600})});
+  g+=txt(w-m.r,h-2,"held-out R²",{anchor:"end",size:10.5})+hit({l:0,r:0},w,h);
+  el.innerHTML=wrap(w,h,g,"Held-out R squared by target: density 0.82, conductivity 0.47, Coulombic efficiency below zero");
+  hover(el,(px,py,layer)=>{let b=null,bd=324;dots.forEach(d=>{const dd=(d[0]-px)**2+(d[1]-py)**2;if(dd<bd){bd=dd;b=d}});if(!b){layer.innerHTML="";return null}
+    layer.innerHTML=`<circle cx="${b[0]}" cy="${b[1]}" r="8" fill="none" stroke="${b[5]}"/>`;
+    return `<b>${b[2]}</b> <span class="k">·</span> R² ${b[4].toFixed(2)}<br>${PIPE[b[3]]}`});
+}
+
+/* ---------- learning curves ---------- */
+function learn(el){
+  const w=el.clientWidth,h=smallH(w),m={l:30,r:40,t:10,b:30},X=lin(.2,1,m.l,w-m.r),Y=lin(-.8,.8,h-m.b,m.t);
+  let g="";
+  [-.8,-.4,0,.4,.8].forEach(v=>g+=hline(m.l,w-m.r,Y(v),v===0?C.ax:C.grid,v===0)+txt(m.l-5,Y(v)+4,v,{anchor:"end",size:10.5}));
+  [.2,.6,1].forEach(v=>g+=txt(X(v),h-m.b+15,v,{anchor:"middle",size:10.5}));
+  const band=(s,col)=>{const ok=s.filter(p=>p[2]!=null&&p[3]!=null),up=ok.map(p=>[X(p[0]),Y(Math.min(.8,p[3]))]),lo=ok.map(p=>[X(p[0]),Y(Math.max(-.8,p[2]))]).reverse();return `<path class="pt" d="${path(up)}L${path(lo).slice(1)}Z" fill="${col}" fill-opacity=".12"/>`};
+  const line=(s,col)=>`<path class="ln" d="${path(s.map(p=>[X(p[0]),Y(p[1])]))}" fill="none" stroke="${col}" stroke-width="1.8"/>`;
+  g+=band(DATA.slac.lcCond,C.blue)+band(DATA.slac.lcCe,C.rust)+line(DATA.slac.lcCond,C.blue)+line(DATA.slac.lcCe,C.rust);
+  const ce=DATA.slac.lcCe.at(-1),co=DATA.slac.lcCond.at(-1);
+  g+=`<circle class="pt" cx="${X(1)}" cy="${Y(co[1])}" r="3.5" fill="${C.blue}"/><circle class="pt" cx="${X(1)}" cy="${Y(ce[1])}" r="3.5" fill="${C.rust}"/>`;
+  g+=txt(X(1)+7,Y(co[1])+4,co[1].toFixed(2),{fill:C.blue,weight:600})+txt(X(1)+7,Y(ce[1])+4,Math.abs(ce[1])<.005?"0.00":ce[1].toFixed(2),{fill:C.rust,weight:600});
+  g+=txt(X(.55),Y(.66),"conductivity",{fill:C.blue,size:11})+txt(X(.55),Y(-.36),"Coulombic efficiency",{fill:C.rust,size:11});
+  g+=txt(w-m.r,h-2,"fraction of training data",{anchor:"end",size:10.5})+hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,"Learning curves: conductivity rises to 0.54, Coulombic efficiency stays at 0");
+  hover(el,(px,py,layer)=>{if(px<m.l||px>w-m.r)return null;const f=Math.min(1,Math.max(.2,(px-m.l)/(w-m.r-m.l)*.8+.2));
+    const c=interp(DATA.slac.lcCond,f),e=interp(DATA.slac.lcCe,f);
+    layer.innerHTML=vline(X(f),m.t,h-m.b,C.ax,true)+`<circle cx="${X(f)}" cy="${Y(c)}" r="3.5" fill="${C.blue}"/>`+(e!=null?`<circle cx="${X(f)}" cy="${Y(e)}" r="3.5" fill="${C.rust}"/>`:"");
+    return `<b>${Math.round(f*100)}%</b> of training data<br>conductivity R² ${f2(c)}${e!=null?`<br>CE R² ${f2(e)}`:""}`});
+}
+
+/* ---------- robot schedule (schematic) ---------- */
+function sched(el){
+  const w=el.clientWidth,N=10,laneH=12,m={l:62,r:6,t:8,b:26},photo=document.querySelector(".fig-a .photo"),target=photo&&photo.clientHeight;
+  const rh=target&&w>360?Math.max(12,Math.min(22,(target-m.t-laneH*2-14-m.b)/N)):14;
+  const h=m.t+laneH*2+14+N*rh+m.b,T=420,X=lin(0,T,m.l,w-m.r),p=8,R=168,lanes=[[],[]];
+  let g="";const yCell=i=>m.t+laneH*2+14+i*rh;
+  g+=txt(0,m.t+9,"channel 1",{size:10.5})+txt(0,m.t+laneH+9,"channel 2",{size:10.5});
+  for(let i=0;i<N;i++){const y=yCell(i),ch=i%2;let t=-((i*31)%(R+2*p));if(i===0)g+=txt(0,y+rh/2+4,"cells",{size:10.5});
+    const seg=(a,b,fill,op)=>{const x0=X(Math.max(0,a)),x1=X(Math.min(T,b));if(x1>x0)g+=`<rect class="sc" data-k="${i}" x="${x0.toFixed(1)}" y="${(y+2).toFixed(1)}" width="${(x1-x0).toFixed(1)}" height="${(rh-5).toFixed(1)}" fill="${fill}" fill-opacity="${op}"/>`};
+    while(t<T){seg(t,t+p,C.ink,.85);lanes[ch].push([t,t+p,i]);seg(t+p,t+p+R,C.blue,.2);seg(t+p+R,t+2*p+R,C.ink,.85);lanes[ch].push([t+p+R,t+2*p+R,i]);t+=2*p+R}}
+  lanes.forEach((L,ch)=>{const y=m.t+ch*laneH;g+=`<rect x="${m.l}" y="${y+2}" width="${w-m.l-m.r}" height="${laneH-4}" fill="${C.ink}" fill-opacity=".05"/>`;
+    L.forEach(([a,b,i])=>{const x0=X(Math.max(0,a)),x1=X(Math.min(T,b));if(x1>x0)g+=`<rect class="sc" data-k="${i}" x="${x0.toFixed(1)}" y="${y+2}" width="${(x1-x0).toFixed(1)}" height="${laneH-4}" fill="${C.ink}" fill-opacity=".85"/>`})});
+  const yb=yCell(N)+6;
+  g+=`<rect x="${m.l}" y="${yb+3}" width="9" height="9" fill="${C.ink}" fill-opacity=".85"/>`+txt(m.l+14,yb+12,"potentiostat",{size:10.5,fill:C.ink});
+  g+=`<rect x="${m.l+92}" y="${yb+3}" width="9" height="9" fill="${C.blue}" fill-opacity=".3"/>`+txt(m.l+106,yb+12,"shelf, 168 h",{size:10.5,fill:C.ink});
+  if(w>330)g+=txt(w-m.r,yb+12,`${N} cells shown`,{size:10.5,anchor:"end"});
+  g+=hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,"Schematic schedule: cells rest 168 hours on a shelf and only use the two potentiostat channels to plate and strip");
+  hover(el,(px,py,layer,svg)=>{const i=Math.floor((py-yCell(0))/rh);if(i<0||i>=N){dim(svg,".sc",null);return null}
+    dim(svg,".sc",String(i));return `<b>Cell ${i+1}</b> <span class="k">·</span> channel ${i%2+1}<br>plate → 168 h on the shelf → strip<br><span class="k">schematic timing</span>`},svg=>dim(svg,".sc",null));
+}
+
+/* ---------- KI₃ current ---------- */
+function ki3(el){
+  const w=el.clientWidth,h=smallH(w),m={l:34,r:40,t:10,b:30},X=lin(0,58,m.l,w-m.r),Y=lin(0,620,h-m.b,m.t);
+  const col={"0.5":"#b39a80","1.0":"#9a6c48","1.5":"#c08a22","2.0":"#b4532a","2.5":"#6e2a14"};
+  let g="";
+  [0,200,400,600].forEach(v=>g+=hline(m.l,w-m.r,Y(v),v?C.grid:C.ax)+txt(m.l-5,Y(v)+4,v,{anchor:"end",size:10.5}));
+  [0,20,40].forEach(v=>g+=txt(X(v),h-m.b+15,v,{anchor:"middle",size:10.5}));
+  const ends=[];for(const k in DATA.ki3){const pts=DATA.ki3[k].map(p=>[X(p[0]),Y(p[1])]);g+=`<path class="ln cv" data-k="${k}" d="${path(pts)}" fill="none" stroke="${col[k]}" stroke-width="1.7"/>`;ends.push({k,y:pts.at(-1)[1]})}
+  ends.sort((a,b)=>b.y-a.y);for(let i=1;i<ends.length;i++)if(ends[i-1].y-ends[i].y<12)ends[i].y=ends[i-1].y-12;ends.forEach(e=>g+=txt(w-m.r+5,e.y+4,e.k+" M",{fill:col[e.k],size:10.5}));
+  g+=txt(w-m.r,h-2,"time, s",{anchor:"end",size:10.5})+txt(m.l+4,m.t+10,"current, mA",{size:10.5})+hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,"Discharge current versus time for five KI3 concentrations");
+  hover(el,(px,py,layer)=>{if(px<m.l||px>w-m.r)return null;const t=(px-m.l)/(w-m.r-m.l)*58;if(t<1.4)return null;let rows="",dots="";
+    Object.keys(DATA.ki3).reverse().forEach(k=>{const v=interp(DATA.ki3[k],t);dots+=`<circle cx="${px}" cy="${Y(v)}" r="3" fill="${col[k]}"/>`;rows+=`<br><span class="k">${k} M</span> ${Math.round(v)} mA`});
+    layer.innerHTML=vline(px,m.t,h-m.b,C.ax,true)+dots;return `<b>t = ${t.toFixed(1)} s</b>${rows}`});
+}
+
+/* ---------- solenoid ---------- */
+function solenoid(el){
+  const w=el.clientWidth,h=Math.round(w*.75),m={l:30,r:8,t:8,b:24},X=lin(0,2.3,m.l,w-m.r),Y=lin(0,1.7,h-m.b,m.t);
+  let g="";
+  [0,.5,1,1.5].forEach(v=>g+=hline(m.l,w-m.r,Y(v),v?C.grid:C.ax)+txt(m.l-4,Y(v)+4,v,{anchor:"end",size:10}));
+  [0,1,2].forEach(v=>g+=txt(X(v),h-m.b+14,v,{anchor:"middle",size:10}));
+  g+=`<line class="ln" x1="${X(0)}" y1="${Y(0)}" x2="${X(2.3)}" y2="${Y(.628*2.3)}" stroke="${C.ink}" stroke-opacity=".45" stroke-dasharray="4 3"/>`;
+  g+=`<line class="ln" x1="${X(0)}" y1="${Y(0)}" x2="${X(2.3)}" y2="${Y(.7356*2.3-.0095)}" stroke="${C.blue}" stroke-opacity=".5"/>`;
+  DATA.solenoid.forEach(([i,b,lo,hi],n)=>g+=`<g class="pt" style="transition-delay:${n*25}ms"><line x1="${X(i)}" x2="${X(i)}" y1="${Y(lo)}" y2="${Y(hi)}" stroke="${C.blue}"/><circle cx="${X(i)}" cy="${Y(b)}" r="2.4" fill="${C.blue}"/></g>`);
+  g+=txt(m.l+4,m.t+10,"B, mT",{size:10})+txt(w-m.r,h-1,"I, A",{anchor:"end",size:10})+txt(X(1.25),Y(.6),"theory",{size:10})+hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,"Measured magnetic field at the solenoid end versus current, with theory line");
+  hover(el,(px,py,layer)=>{if(px<m.l)return null;let b=null,bd=1e9;DATA.solenoid.forEach(r=>{const d=Math.abs(X(r[0])-px);if(d<bd){bd=d;b=r}});
+    layer.innerHTML=`<circle cx="${X(b[0])}" cy="${Y(b[1])}" r="5" fill="none" stroke="${C.ink}"/>`;
+    return `<b>I = ${b[0].toFixed(2)} A</b><br>B = ${f3(b[1])} mT <span class="k">(${f3(b[2])}–${f3(b[3])}, 5 trials)</span><br>theory ${f3(.628*b[0])} mT · ×${(b[1]/(.628*b[0])).toFixed(2)}`});
+}
+
+const D={
+saxs:`<h2>Electrolyte optimization using X-ray + ML</h2><p class="meta">SLAC National Accelerator Laboratory · Summer 2026</p>
+<ul><li>104 aqueous zinc electrolytes across 22 cosolvent families</li><li>Input: a 955-point SAXS + WAXS curve per electrolyte (q = 0.059–3.12 Å⁻¹)</li><li>Conductivity: PLS(7) → XGBoost on the full curve. R² 0.54 when whole cosolvent families are held out, 0.57 on random splits</li><li>Held out one family at a time, 6 of 14 families score R² above 0.5</li><li>Density: elastic-net features → Ridge, R² 0.80 over 30 random 80/20 splits. Total scattered intensity carries most of the signal</li><li>Conductivity leans on one mid-q peak feature, 7× more important than the next</li><li>Coulombic efficiency: 100+ model variants; only a low-q slope beat a null, at R² ≈ 0.02. Replicate cells put the ceiling at 0.6–0.8, so the limit is the bulk measurement, not the data noise</li></ul>
+<figure><div class="chart" id="c-saxs2"></div><figcaption>The model input: SAXS + WAXS curves for five electrolytes, labelled by cosolvent family</figcaption></figure>
+<div class="links"><span>Mentor: Zhichen Xue · PI: Xueli Zheng</span><span>Hover labels show cosolvent family only</span></div>`,
+robot:`<h2>Automated robotic platform</h2><p class="meta">Stanford Robotics Center · SLAC · 2026</p>
+<p>Current research project with a preprint coming in December. For more details, <a href="mailto:ajthom@stanford.edu" style="text-decoration:underline;text-underline-offset:2px">email me</a>!</p>
+<div class="links"><span>Built at the Stanford Robotics Center</span><span>Mentor: Zhichen Xue · PI: Xueli Zheng · Robotics: Yukio Cho</span></div>`,
+options:`<h2>Options trading research</h2><p class="meta">Personal project · no real money traded · not investment advice</p>
+<p>The strategy itself stays private. What I can share is how it was built and tested, which is where most of the work went.</p>
+<h4 style="font-size:12px;color:var(--muted);font-weight:500;margin:18px 0 6px">Engineering</h4>
+<ul><li>About 12,900 lines of Python: an ingestion pipeline plus a 40-script validation suite</li><li>Asynchronous, batched data collection with rate limiting; a Redis job queue feeding a long-running worker</li><li>Postgres plus compressed Parquet; only raw data is stored, and every derived table is recomputed</li><li>Unattended scheduled runs on macOS, with wake-from-sleep and an exchange trading calendar</li></ul>
+<h4 style="font-size:12px;color:var(--muted);font-weight:500;margin:18px 0 6px">Statistics</h4>
+<ul><li>Matched-random controls, date-block bootstraps and permutation tests</li><li>Probability of backtest overfitting (CSCV) and walk-forward calibration</li><li>Kelly and Monte Carlo position sizing under drawdown limits</li></ul>
+<h4 style="font-size:12px;color:var(--muted);font-weight:500;margin:18px 0 6px">Not fooling myself</h4>
+<ul><li>Wrote the holdout test down before looking at the holdout</li><li>Removed an input that used information only available after the decision</li><li>Caught my own Sharpe formula overstating results by more than 2× and fixed it</li><li>Found a fitted Ridge/XGBoost model was effectively sorting on one input, and shipped the simpler sort</li><li>Dropped four candidate metrics when a purely random control beat the model on them</li></ul>
+<h4 style="font-size:12px;color:var(--muted);font-weight:500;margin:18px 0 6px">Limits</h4>
+<ul><li>Only the rule's threshold is truly out-of-sample; its design was chosen on data that includes the holdout</li><li>The holdout was a good period for everything: compounded, the rule made +214% vs. +196% for taking every event. The edge shows in per-pick quality and drawdown</li><li>33 holdout picks fall on only 19 dates</li><li>Not yet run live</li></ul>
+<div class="links"><span>Strategy details, code and trade-level data are private</span></div>`,
+flow:`<h2>Zinc–iodide flow batteries</h2><p class="meta">Independent project · Kenya · 2024–25</p>
+<ul><li>Four casing designs, from a cylinder with a flanged port to a flat bolted frame</li><li>Cathodes slurry-cast with graphite; zinc foil anodes</li><li>Made my own cation-exchange membranes</li><li>Constant-current cycling with a self-built circuit (microcontroller + logging), under $10</li><li>50 mAh cells, 20+ cycles; under 1% capacity drop per cycle in early tests</li></ul>
+<figure><img class="band" src="img/membranes.webp" alt="Seven home-made membrane discs"><figcaption>Home-made cation-exchange membranes</figcaption></figure>
+<figure><img class="photo" src="img/test-circuit.jpg" alt="Microcontroller test circuit on a breadboard"><figcaption>Test circuit</figcaption></figure>
+<figure><img class="photo" src="img/flow-cell-testing.jpg" alt="Flow cell clamped on the bench during testing"><figcaption>Cell under test</figcaption></figure>`,
+fire:`<h2>Forest fire spread model</h2><p class="meta">Independent project · 2023–25</p>
+<ul><li>Built a dataset of 82,140 fires from the CMS Global Fire Atlas, with weather from Google Earth Engine (6 GB, ~200 hours of downloads)</li><li>Models: a 3-layer fully convolutional net (64, 128, 256) and a convolutional LSTM</li><li>Custom loss, learning rate 1e-4, random flip and crop</li><li>Test accuracy read 97%, but data issues inflated it; realistic accuracy is about 60%, good for about 2 days ahead</li></ul>
+<figure><img class="photo" src="img/fire-predictions.webp" alt="Fire spread maps"><figcaption>Model outputs on test fires</figcaption></figure>
+<div class="links"><a href="https://github.com/ajt-k/Fire-ML">github.com/ajt-k/Fire-ML</a></div>`,
+hydro:`<h2>Rooftop hydroponics</h2><p class="meta">Kenya</p><ul><li>Designed a working rooftop hydroponic system: 100 L capacity, 75 plants, about 10 m²</li><li>Tested nutrient solutions</li><li>Planned rollout in a local informal settlement</li></ul><figure><img class="photo" src="img/hydroponics.jpg" alt="Hydroponic tubes on a roof"></figure>`,
+solenoid:`<h2>Solenoid end field</h2><p class="meta">IB Higher Level Physics internal assessment</p><ul><li>Measured the field at the end of a solenoid from 0.2 to 2.2 A, five trials per current</li><li>B is proportional to I (intercept within uncertainty of zero)</li><li>Slope 0.736 ± 0.022 mT/A vs. 0.628 predicted: about 16% above the end-field formula</li><li>Averaged over power-supply ripple to remove periodic oscillation in the readings</li></ul><figure><div class="chart" id="c-sol2"></div><figcaption>Measured (blue, min–max of 5 trials) vs. theory (dashed)</figcaption></figure>`,
+interf:`<h2>Laser interferometer</h2><p class="meta">Built in my dorm room <span class="todo">[fill in: year]</span></p><div class="mine"><div class="ml">Key contributions</div><ul><li>Designed and built it solo, from under $10 of parts</li></ul></div><ul><li>Custom-designed detector circuit and optical setup</li><li>Sensitive enough to pick up footsteps and voices from across the room</li></ul><figure><img class="photo" src="img/interferometer-layout.jpg" alt="Top view of the interferometer layout on a desk"><figcaption>The optical layout, lights on</figcaption></figure><figure><img class="photo" src="img/interferometer-beam.jpg" alt="Laser beams in the dark"></figure>`,
+embassy:`<h2>US Embassy energy analysis</h2><p class="meta">Nairobi · Summer 2024</p><ul><li>Five years of electricity data, 150+ properties</li><li>Solar plan with a five-year return model</li></ul>`
+};
+
+
+
+
+/* ---------- options: random-control histogram ---------- */
+function optHist(el){
+  const H=DATA.opt.hist,w=el.clientWidth,h=Math.round(Math.max(240,Math.min(400,w*.48))),m={l:18,r:w<520?10:24,t:46,b:34};
+  const x0=H.edges[0],x1=H.edges.at(-1),X=lin(x0,x1,m.l,w-m.r),maxc=Math.max(...H.counts),Y=lin(0,maxc*1.08,h-m.b,m.t);
+  let g=txt(m.l,13,"Out-of-sample test: 33 picks by the frozen rule vs. 20,000 random sets of 33",{fill:C.ink,weight:600,size:12.5});
+  [0,100,200,300].forEach(v=>g+=vline(X(v),h-m.b,h-m.b+5,C.ax)+txt(X(v),h-m.b+18,(v>0?"+":"")+v+"%",{anchor:"middle"}));
+  g+=hline(m.l,w-m.r,h-m.b,C.ax);
+  H.counts.forEach((c,i)=>{const a=X(H.edges[i])+.5,b=X(H.edges[i+1])-.5,above=H.edges[i]>=H.rule;g+=`<rect class="pt bin" data-i="${i}" style="transition-delay:${i*12}ms" x="${a.toFixed(1)}" y="${Y(c).toFixed(1)}" width="${Math.max(0,b-a).toFixed(1)}" height="${(Y(0)-Y(c)).toFixed(1)}" fill="${C.ink}" fill-opacity="${above?.55:.18}"/>`});
+  const xr=X(H.rule),xm=X(H.median);
+  g+=`<line class="ln" x1="${xm}" x2="${xm}" y1="${m.t+18}" y2="${h-m.b}" stroke="${C.ink}" stroke-opacity=".45" stroke-dasharray="3 3"/>`+txt(xm+5,m.t+26,`random median +${H.median}%`,{size:10.5});
+  g+=`<line class="ln" x1="${xr}" x2="${xr}" y1="${m.t}" y2="${h-m.b}" stroke="${C.blue}" stroke-width="2"/>`;
+  g+=txt(xr+(w-xr>150?7:-7),m.t+10,`rule +${H.rule}%`,{fill:C.blue,weight:600,anchor:w-xr>150?"start":"end"})+txt(xr+(w-xr>150?7:-7),m.t+24,`beats ${H.pct}% of random sets`,{fill:C.blue,size:10.5,anchor:w-xr>150?"start":"end"});
+  g+=txt(w-m.r,h-2,"compounded return on unseen data, Oct 2025 – Apr 2026",{anchor:"end",size:10.5})+hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,`Histogram of 20,000 random 33-event selections; the rule's +213.6% beats ${H.pct}% of them`);
+  hover(el,(px,py,layer)=>{const v=x0+(px-m.l)/(w-m.r-m.l)*(x1-x0),i=Math.floor((v-x0)/10);if(i<0||i>=H.counts.length)return null;
+    layer.innerHTML=`<rect x="${X(H.edges[i])}" y="${m.t}" width="${X(H.edges[i+1])-X(H.edges[i])}" height="${h-m.b-m.t}" fill="${C.ink}" fill-opacity=".06"/>`;
+    const below=H.counts.slice(0,i+1).reduce((a,b)=>a+b,0);
+    return `<b>${H.edges[i]}% to ${H.edges[i+1]}%</b><br>${H.counts[i].toLocaleString()} random sets <span class="k">· ${(below/H.n*100).toFixed(1)}% at or below</span>`});
+}
+
+/* ---------- options: walk-forward equity ---------- */
+function optEquity(el){
+  const E=DATA.opt.eq,w=el.clientWidth,h=smallH(w),m={l:28,r:36,t:10,b:30};
+  const t=s=>Date.parse(s+"T00:00:00Z"),ta=t(E.rule[0][0]),tb=t(E.rule.at(-1)[0]),X=lin(ta,tb,m.l,w-m.r),Y=lin(.8,7.2,h-m.b,m.t);
+  let g="";
+  [1,3,5,7].forEach(v=>g+=hline(m.l,w-m.r,Y(v),v===1?C.ax:C.grid)+txt(m.l-5,Y(v)+4,v+"×",{anchor:"end",size:10.5}));
+  ["2024","2025","2026"].forEach(y=>{const x=X(t(y+"-01-05"));g+=vline(x,h-m.b,h-m.b+4,C.ax)+txt(x,h-m.b+15,y,{anchor:"middle",size:10.5})});
+  const ln=(s,col,wd)=>`<path class="ln" d="${path(s.map(([d,v])=>[X(t(d)),Y(v)]))}" fill="none" stroke="${col}" stroke-width="${wd}" stroke-linejoin="round"/>`;
+  g+=ln(E.all,C.mut,1.4)+ln(E.rule,C.blue,1.9);
+  const r=E.rule.at(-1),a=E.all.at(-1);
+  g+=txt(w-m.r+5,Y(r[1])+4,r[1].toFixed(1)+"×",{fill:C.blue,weight:600,size:10.5})+txt(w-m.r+5,Y(a[1])+4,a[1].toFixed(1)+"×",{size:10.5});
+  g+=txt(m.l+4,m.t+10,"rule",{fill:C.blue,size:11})+txt(m.l+30,m.t+10,"take everything",{size:11})+txt(w-m.r,h-2,"growth of $1, walk-forward",{anchor:"end",size:10.5})+hit(m,w,h);
+  el.innerHTML=wrap(w,h,g,"Walk-forward growth: rule 6.8 times, take-everything 3.5 times, Jan 2024 to Apr 2026");
+  hover(el,(px,py,layer)=>{if(px<m.l||px>w-m.r)return null;const tt=ta+(px-m.l)/(w-m.r-m.l)*(tb-ta);let i=0,bd=1e18;E.rule.forEach((p,j)=>{const d=Math.abs(t(p[0])-tt);if(d<bd){bd=d;i=j}});
+    const d=E.rule[i][0],x=X(t(d));layer.innerHTML=vline(x,m.t,h-m.b,C.ax,true)+`<circle cx="${x}" cy="${Y(E.rule[i][1])}" r="3.5" fill="${C.blue}"/><circle cx="${x}" cy="${Y(E.all[i][1])}" r="3" fill="${C.mut}"/>`;
+    return `<b>week ending ${d}</b><br><span style="color:#9fbdf0">rule</span> ${E.rule[i][1].toFixed(2)}× <span class="k">· take everything ${E.all[i][1].toFixed(2)}×</span>`});
+}
+
+/* ---------- options: signal quintiles ---------- */
+function optQuint(el){
+  const Q=DATA.opt.quint,w=el.clientWidth,h=smallH(w),m={l:30,r:8,t:14,b:44},X=lin(0,Q.length,m.l,w-m.r),Y=lin(-14,20,h-m.b,m.t),bw=(w-m.l-m.r)/Q.length;
+  let g="";
+  [-10,0,10,20].forEach(v=>g+=hline(m.l,w-m.r,Y(v),v===0?C.ax:C.grid)+txt(m.l-5,Y(v)+4,(v>0?"+":"")+v,{anchor:"end",size:10.5}));
+  Q.forEach(([q,n,mean,win],i)=>{const x=X(i)+bw*.18,ww=bw*.64,y0=Y(0),y1=Y(mean),col=mean>=0?C.blue:C.rust;
+    g+=`<rect class="pt" style="transition-delay:${i*60}ms" x="${x.toFixed(1)}" y="${Math.min(y0,y1).toFixed(1)}" width="${ww.toFixed(1)}" height="${Math.abs(y1-y0).toFixed(1)}" fill="${col}" fill-opacity=".8"/>`;
+    g+=txt(x+ww/2,mean>=0?y1-5:y1+13,(mean>0?"+":"")+mean.toFixed(1),{anchor:"middle",fill:col,weight:600,size:10.5})+txt(x+ww/2,h-m.b+15,q,{anchor:"middle",size:10.5})});
+  g+=txt(X(0)+4,h-m.b+30,"weakest signal",{size:10.5})+txt(X(Q.length)-4,h-m.b+30,"strongest",{size:10.5,anchor:"end"});
+  g+=txt(m.l+4,m.t-2,"mean return per pick, %",{size:10.5})+hit({l:m.l,r:m.r},w,h);
+  el.innerHTML=wrap(w,h,g,"Mean return per pick rises from minus 10.8 percent in the weakest-signal fifth to plus 16.0 percent in the strongest");
+  hover(el,(px,py,layer)=>{const i=Math.floor((px-m.l)/bw);if(i<0||i>=Q.length)return null;const [q,n,mean,win]=Q[i];
+    layer.innerHTML=`<rect x="${X(i)}" y="${m.t}" width="${bw}" height="${h-m.b-m.t}" fill="${C.ink}" fill-opacity=".05"/>`;
+    return `<b>${q}</b> of signal strength<br>${n} events · mean ${(mean>0?"+":"")+mean}% · win rate ${win}%`});
+}
+
+/* ---------- options: per-year ---------- */
+function optYear(el){
+  const Y0=DATA.opt.year,years=[...new Set(Y0.map(r=>r[0]))],w=el.clientWidth,h=smallH(w),m={l:30,r:8,t:14,b:30};
+  const X=lin(0,years.length,m.l,w-m.r),Y=lin(-8,62,h-m.b,m.t),gw=(w-m.l-m.r)/years.length;
+  let g="";
+  [0,20,40,60].forEach(v=>g+=hline(m.l,w-m.r,Y(v),v===0?C.ax:C.grid)+txt(m.l-5,Y(v)+4,(v>0?"+":"")+v,{anchor:"end",size:10.5}));
+  const bars=[];
+  years.forEach((y,i)=>{["rule","all"].forEach((s,j)=>{const r=Y0.find(r=>r[0]===y&&r[1]===s),x=X(i)+gw*(.16+j*.36),ww=gw*.32,y0=Y(0),y1=Y(r[3]),col=s==="rule"?C.blue:C.mut;
+      bars.push([x,ww,r]);g+=`<rect class="pt" x="${x.toFixed(1)}" y="${Math.min(y0,y1).toFixed(1)}" width="${ww.toFixed(1)}" height="${Math.abs(y1-y0).toFixed(1)}" fill="${col}" fill-opacity="${s==="rule"?.85:.45}"/>`+txt(x+ww/2,r[3]>=0?y1-5:y1+13,(r[3]>0?"+":"")+r[3],{anchor:"middle",size:10,fill:s==="rule"?C.blue:C.mut,weight:s==="rule"?600:0})});
+    g+=txt(X(i)+gw/2,h-m.b+15,y==="2026"?"2026 (Jan–Apr)":y,{anchor:"middle",size:10.5})});
+  g+=txt(m.l+4,m.t-2,"mean return per pick, %",{size:10.5})+hit({l:m.l,r:m.r},w,h);
+  el.innerHTML=wrap(w,h,g,"Mean return per pick by year, rule versus take-everything; 2024: plus 9.1 versus minus 3.5 percent");
+  hover(el,(px,py,layer)=>{const b=bars.find(([x,ww])=>px>=x-3&&px<=x+ww+3);if(!b){layer.innerHTML="";return null}const r=b[2];
+    layer.innerHTML=`<rect x="${b[0]-2}" y="${m.t}" width="${b[1]+4}" height="${h-m.b-m.t}" fill="none" stroke="${C.ink}" stroke-opacity=".3"/>`;
+    return `<b>${r[0]}</b> · ${r[1]==="rule"?"rule":"take everything"}<br>${r[2]} picks · mean ${(r[3]>0?"+":"")+r[3]}% per pick`});
+}
+
+
+/* bold the short label in "Label: text" phrases (labels of five words or fewer) */
+const BOLD_SEL=".mine li, .lead p, .gwrap p, .panel li, .panel p, .links span, .tile .d, .info .desc, .otherwise p";
+function boldLabels(root){root.querySelectorAll(BOLD_SEL).forEach(el=>{if(el.dataset.bolded||el.closest(".todo")||el.querySelector(".todo"))return;el.dataset.bolded="1";
+  el.innerHTML=el.innerHTML.replace(/(^|[.!?]\s+|·\s+)([A-Z][^:.<>·]{0,48}?):(\s)/g,(m,pre,label,sp)=>label.trim().split(/\s+/).length<=5?`${pre}<b>${label}</b>:${sp}`:m)})}
+boldLabels(document);
+/* ---------- side panel ---------- */
+const panel=document.getElementById("panel");
+function openP(k){panel.innerHTML=`<button class="x" onclick="closeP()">close ✕</button>`+D[k];panel.scrollTop=0;boldLabels(panel);const s2=document.getElementById("c-sol2");if(s2)requestAnimationFrame(()=>solenoid(s2));const x2=document.getElementById("c-saxs2");if(x2)requestAnimationFrame(()=>saxs(x2));panel.setAttribute("aria-hidden","false");document.body.classList.add("open")}
+function closeP(){document.body.classList.remove("open");panel.setAttribute("aria-hidden","true");hideTip()}
+document.querySelectorAll("[data-k]").forEach(el=>{if(el.closest("svg"))return;el.addEventListener("click",e=>{if(e.target.closest(".hit"))return;openP(el.dataset.k)});if(el.tagName!=="BUTTON")el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openP(el.dataset.k)}})});
+document.getElementById("scrim").onclick=closeP;document.addEventListener("keydown",e=>e.key==="Escape"&&closeP());
+
+/* ---------- draw + draw-in ---------- */
+const CHARTS=[["c-saxs",saxs],["c-dens",density],["c-cond",condPar],["c-cep",cePar],["c-learn",learn],["c-ki3",ki3],["c-sol",solenoid],["c-ohist",optHist],["c-oeq",optEquity],["c-oq",optQuint],["c-oy",optYear]];
+const canAnimate=!REDUCE&&"IntersectionObserver" in window;
+if(canAnimate)CHARTS.forEach(([id])=>document.getElementById(id)?.classList.add("anim"));
+function drawAll(){CHARTS.forEach(([id,fn])=>{const el=document.getElementById(id);if(el)fn(el)});const st=document.getElementById("strips");if(st)st.style.height=smallH(st.clientWidth)+"px"}
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(drawAll,120)});
+addEventListener("load",drawAll);
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(drawAll);drawAll();
+let observing=false;
+/* line draw-in driven from script with real path lengths, so every browser ends fully drawn */
+function drawIn(el){const ps=[...el.querySelectorAll(".ln")].map(p=>{let L=0;try{L=p.getTotalLength()}catch(e){}return [p,L]}).filter(x=>x[1]>0);if(!ps.length)return;
+  ps.forEach(([p,L])=>{p.style.strokeDasharray=L+" "+L;p.style.strokeDashoffset=L});const t0=performance.now(),D=1200;
+  const step=now=>{const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,3);ps.forEach(([p,L])=>{if(p.isConnected)p.style.strokeDashoffset=L*(1-e)});
+    if(k<1)requestAnimationFrame(step);else ps.forEach(([p])=>{p.style.strokeDasharray="";p.style.strokeDashoffset=""})};requestAnimationFrame(step)}
+function startDrawIn(){if(observing||!canAnimate)return;observing=true;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");drawIn(e.target);io.unobserve(e.target)}}),{threshold:.25});
+  document.querySelectorAll(".chart.anim").forEach(el=>io.observe(el))}
+
+/* ---------- terminal intro ---------- */
+const term=document.getElementById("term"),tout=document.getElementById("t-out"),tcmd=document.getElementById("t-cmd"),thint=document.getElementById("t-hint");
+const TOUCH=matchMedia("(pointer: coarse)").matches;
+const CMD="python3 ~/Documents/run_analysis_and_arrangement.py --new-browser --friendly";
+let stage="off",timers=[];
+const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
+function seenIntro(){try{return localStorage.getItem("at-intro")==="1"}catch(e){return false}}
+function markSeen(){try{localStorage.setItem("at-intro","1")}catch(e){}}
+function intro(){
+  timers.forEach(clearTimeout);timers=[];stage="typing";term.hidden=false;term.classList.remove("leaving");document.body.classList.add("lock");
+  tout.textContent="";thint.hidden=true;tcmd.textContent="";term.focus({preventScroll:true});
+  const showHint=()=>{stage="ready";thint.innerHTML=TOUCH?"Tap anywhere to load the website":"Press <kbd>Enter</kbd> to load the website";thint.hidden=false};
+  if(REDUCE){tcmd.textContent=CMD;showHint();return}
+  let i=0;const step=()=>{tcmd.textContent=CMD.slice(0,++i);if(i<CMD.length)later(step,14+Math.random()*16);else later(showHint,250)};later(step,450);
+}
+function run(){
+  if(stage==="typing"){timers.forEach(clearTimeout);timers=[];tcmd.textContent=CMD}
+  if(stage!=="ready"&&stage!=="typing")return;stage="running";thint.hidden=true;
+  const W=TOUCH||innerWidth<640?16:30,steps=[
+    [.12,"collecting data ........ 104 electrolytes · 955-point curves"],
+    [.36,"fitting models ......... nested CV · 30 seeds"],
+    [.60,"starting platform ...... automated testing"],
+    [.82,"loading builds ......... 4 casings · 82,140 fires"]];
+  const dur=REDUCE?300:2000,t0=performance.now();let printed=0,lines=[];
+  const frame=now=>{const p=Math.min(1,(now-t0)/dur);while(printed<steps.length&&p>=steps[printed][0]){lines.push(`<span class="ok">✓</span> ${steps[printed][1]}`);printed++}
+    const n=Math.round(p*W);tout.innerHTML=lines.join("\n")+`\n<span class="dim">[</span>${"█".repeat(n)}${"·".repeat(W-n)}<span class="dim">]</span> ${String(Math.round(p*100)).padStart(3)}%`;
+    if(p<1)requestAnimationFrame(frame);else{tout.innerHTML+=`\n\n<span class="dim">done in 2.0 s · opening</span> alex_thomas.html`;later(finish,REDUCE?0:650)}};
+  requestAnimationFrame(frame);
+}
+function finish(){if(stage==="done")return;stage="done";timers.forEach(clearTimeout);timers=[];markSeen();term.classList.add("leaving");document.body.classList.remove("lock");
+  later(()=>{term.hidden=true;startDrawIn()},REDUCE?0:700)}
+term.addEventListener("click",e=>{if(e.target.closest(".skip"))return;run()});
+document.getElementById("t-skip").addEventListener("click",e=>{e.stopPropagation();finish()});
+document.addEventListener("keydown",e=>{if(term.hidden)return;if(e.key==="Enter"){e.preventDefault();run()}else if(e.key==="Escape"){finish()}});
+document.getElementById("replay").addEventListener("click",()=>{stage="off";intro()});
+if(seenIntro()){term.hidden=true;startDrawIn()}else intro();
+
+</script>
 </body>
 </html>

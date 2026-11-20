@@ -278,7 +278,7 @@ html{scroll-behavior:smooth}
     <h2>Platform design and build</h2>
     <p>Designed and built at the Stanford Robotics Center in 3 months.</p>
   </div>
-  <div class="fig-v fig-v2"><video class="vdemo" src="img/robot-demo.mp4" poster="img/robot-demo-poster.jpg" controls muted preload="none" playsinline aria-label="Demo video, 2x speed"></video><div class="mini"><span class="todo">[fill in: caption for the demo video]</span></div></div>
+  <div class="fig-v fig-v2"><video class="vdemo" src="img/robot-demo.mp4" poster="img/robot-demo-poster.jpg" controls muted preload="none" playsinline aria-label="Demo video, 2x speed"></video><div class="mini"><span class="caption">Robot arm placing electrode</span></div></div>
   <div class="fig-s"><img class="photo wide" src="img/rack-render-1.jpg" alt="Render of the fluid rack design"><div class="mini">Rack design, rendered</div></div>
   <div class="fig-s"><img class="photo wide" src="img/rack-built.jpg" alt="The built fluid rack with peristaltic pumps next to a robot arm"><div class="mini">The rack, built</div></div>
   <div class="fig-full"><div class="scroll-x"><img class="sched-img" src="img/scheduler-plan.webp" alt="Scheduler plan: 35 runs on 4 reactors over 4 hours 51 minutes"></div><div class="mini">Scheduler plan for one batch: 35 runs on 4 reactors in 4 h 51 min. One shared balance serializes the fills, and each reactor measures while the next fill is dosed.</div></div>
@@ -328,8 +328,10 @@ html{scroll-behavior:smooth}
   <div class="info">
     <p class="meta">Personal project · no real money traded</p>
     <div class="mine"><div class="ml">Key contributions</div><ul><li>All of it: data pipeline, research, statistics and validation</li></ul></div>
-    <p class="desc"><span class="todo">[fill in: 2–3 sentences]</span></p>
+    <p class="desc"><span class="text">Downloaded volatile event data from 1500 past instances over 4 years. Developed and tested volatility based trade hypothesis. Currently: building a PC to run the automated trade scanner.</span></p>
     <dl class="stats">
+
+
       <div><dt>Events studied</dt><dd>815</dd></div>
       <div><dt>Signal correlation</dt><dd>ρ = +0.13, positive every year</dd></div>
       <div><dt>Unseen data, mean per pick</dt><dd>+42.6% vs. +15.0%</dd></div>
@@ -576,7 +578,7 @@ fire:`<h2>Forest fire spread model</h2><p class="meta">Independent project · 20
 <div class="links"><a href="https://github.com/ajt-k/Fire-ML">github.com/ajt-k/Fire-ML</a></div>`,
 hydro:`<h2>Rooftop hydroponics</h2><p class="meta">Kenya</p><ul><li>Designed a working rooftop hydroponic system: 100 L capacity, 75 plants, about 10 m²</li><li>Tested nutrient solutions</li><li>Planned rollout in a local informal settlement</li></ul><figure><img class="photo" src="img/hydroponics.jpg" alt="Hydroponic tubes on a roof"></figure>`,
 solenoid:`<h2>Solenoid end field</h2><p class="meta">IB Higher Level Physics internal assessment</p><ul><li>Measured the field at the end of a solenoid from 0.2 to 2.2 A, five trials per current</li><li>B is proportional to I (intercept within uncertainty of zero)</li><li>Slope 0.736 ± 0.022 mT/A vs. 0.628 predicted: about 16% above the end-field formula</li><li>Averaged over power-supply ripple to remove periodic oscillation in the readings</li></ul><figure><div class="chart" id="c-sol2"></div><figcaption>Measured (blue, min–max of 5 trials) vs. theory (dashed)</figcaption></figure>`,
-interf:`<h2>Laser interferometer</h2><p class="meta">Built in my dorm room <span class="todo">[fill in: year]</span></p><div class="mine"><div class="ml">Key contributions</div><ul><li>Designed and built it solo, from under $10 of parts</li></ul></div><ul><li>Custom-designed detector circuit and optical setup</li><li>Sensitive enough to pick up footsteps and voices from across the room</li></ul><figure><img class="photo" src="img/interferometer-layout.jpg" alt="Top view of the interferometer layout on a desk"><figcaption>The optical layout, lights on</figcaption></figure><figure><img class="photo" src="img/interferometer-beam.jpg" alt="Laser beams in the dark"></figure>`,
+interf:`<h2>Laser interferometer</h2><p class="meta">Built in my dorm room <span class="todo">2026</span></p><div class="mine"><div class="ml">Key contributions</div><ul><li>Designed and built it solo, from under $10 of parts</li></ul></div><ul><li>Custom-designed detector circuit and optical setup</li><li>Sensitive enough to pick up footsteps and voices from across the room</li></ul><figure><img class="photo" src="img/interferometer-layout.jpg" alt="Top view of the interferometer layout on a desk"><figcaption>The optical layout, lights on</figcaption></figure><figure><img class="photo" src="img/interferometer-beam.jpg" alt="Laser beams in the dark"></figure>`,
 embassy:`<h2>US Embassy energy analysis</h2><p class="meta">Nairobi · Summer 2024</p><ul><li>Five years of electricity data, 150+ properties</li><li>Solar plan with a five-year return model</li></ul>`
 };
 
